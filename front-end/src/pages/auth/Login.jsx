@@ -4,8 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { useCookies } from 'react-cookie';
 
-import useAuth from '../../hooks/useAuth';
-import axios from '../../api/axios';
+import HandleLogin from '../../services/loginService';
 
 import { 
 Typography,
@@ -26,11 +25,11 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export default function Login () {
 
-    const { setAuth } = useAuth();
-
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
+
+    const [cookies, setCookie] = useCookies(['user']);
 
     const [email, setEmail] = useState('');
 
@@ -40,20 +39,19 @@ export default function Login () {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
 
-    const [setCookie] = useCookies(['user']);
-
     useEffect( () => {
         setErrorMessage('');
     }, [email]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const loginUser = {
+            email : email,
+            password : password    
+        };
         try {
-            const res = await axios.post('login', JSON.stringify({ email, password }), {headers: { 'Content-Type': 'application/json'}})
-            const user = res?.data?.user;
-            const accessToken = res?.data?.accessToken;
-            setAuth({ user, accessToken });
-            //setCookie('user', { user, accessToken }, {path:'/', maxAge:31536000});
+            const newCookie = await HandleLogin(loginUser);
+            rememberMe ? setCookie('user', newCookie, {path:'/', maxAge:31536000}) : setCookie('user', newCookie, {path:'/'})
             navigate(from, { replace: true });
         } catch (err) {
             setErrorMessage('Login failed');

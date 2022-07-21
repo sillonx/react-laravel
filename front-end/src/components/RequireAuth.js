@@ -1,15 +1,19 @@
 import { useLocation, Navigate, Outlet } from 'react-router-dom';
 
-import useAuth from '../hooks/useAuth';
+import { useCookies } from 'react-cookie';
 
-const RequireAuth = () => {
-    const { auth } = useAuth();
+
+const RequireAuth = ({ allowedRoles }) => {
     const location = useLocation();
+    const [cookies] = useCookies(['user']);
+    const role = cookies?.user?.role;
 
     return (
-        auth?.user
+        allowedRoles?.includes(role)
             ? <Outlet />
-            : <Navigate to='/login' state={{ from: location }} replace />
+            : role === 118
+                ? <Navigate to='/unauthorized' state={{ from: location }} replace />
+                : <Navigate to='/login' state={{ from: location }} replace />
     )
 }
 

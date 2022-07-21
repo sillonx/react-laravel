@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import useAuth from '../../hooks/useAuth';
+import { useCookies } from 'react-cookie';
 
-import axios from '../../api/axios';
+import HandleRegister from '../../services/registerService';
 
 import { 
 Typography,
@@ -16,12 +16,15 @@ InputAdornment,
 InputLabel,
 IconButton,
 FormControl,
-FormHelperText } from '@mui/material';
+FormHelperText,
+Select,
+MenuItem } from '@mui/material';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
+import HandleLogin from '../../services/loginService';
 
 const NAME_REGEX = /^[a-zA-Z][a-z-A-Z0-9-_]{3,24}$/;
 const EMAIL_REGEX = /^[a-zA-Z][a-zA-Z0-9.-_]+@[a-zA-Z]+\.([a-zA-Z])+$/;
@@ -30,7 +33,13 @@ const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%-_]).{8,24}
 
 export default function Register () {
 
-    const { setAuth } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from?.pathname || "/";
+
+    const [cookies, setCookie] = useCookies(['user']);
+
+    const [role, setRole] = useState('user');
 
     const [name, setName] = useState('');
     const [validName, setValidName] = useState(false);
@@ -65,32 +74,32 @@ export default function Register () {
         setErrorMessage('');
     }, [name, password, match]);
 
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    }
-
-    const handleClickShowMatch = () => {
-        setShowMatch(!showMatch);
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!NAME_REGEX.test(name) || !EMAIL_REGEX.test(email) || !PASSWORD_REGEX.test(password) || !PASSWORD_REGEX.test(match)) {
-            setErrorMessage("Invalid entry");
+            setErrorMessage('Invalid entry');
             return;
         }
         const newUser = {
             name : name,
             email : email,
+            password : password,
+            role : role
+        };
+        const loginUser = {
+            email : email,
             password : password    
         };
+        const registerStatus = await HandleRegister(newUser);
+        if (!registerStatus) {
+            setErrorMessage('Registration failed');
+        }
         try {
-            axios.post('register', newUser, {headers: { 'Content-Type': 'application/json'}}).then( (res) => {
-                const accessToken = res?.data?.accessToken;
-                setAuth({ email, password, accessToken });
-            });
-        } catch (err) {
-            setErrorMessage('Register failed');
+            const newCookie = await HandleLogin(loginUser);
+            setCookie('user', newCookie, {path:'/'});
+            navigate(from, { replace: true });
+        } catch(err) {
+            setErrorMessage('Auto login failed');
         }
     }
 
@@ -107,6 +116,17 @@ export default function Register () {
             <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
                 <form onSubmit={handleSubmit}>
                     <Stack direction='column' spacing={3} p={2} justifyContent='center' alignItems='center'>
+                        <FormControl fullWidth>
+                            <InputLabel>Role *</InputLabel>
+                            <Select
+                            value={role}
+                            label='Role'
+                            onChange={(e) => setRole(e.target.value)} >
+                                <MenuItem value={'user'}>User</MenuItem>
+                                <MenuItem value={'admin'}>Admin</MenuItem>
+                            </Select>
+                        </FormControl>
+
                         <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
                             <FormControl>
                                 <InputLabel>Username *</InputLabel>
@@ -154,7 +174,7 @@ export default function Register () {
                                     endAdornment={
                                         <InputAdornment position='end'>
                                             <IconButton
-                                            onClick={handleClickShowPassword}
+                                            onClick={() => setShowPassword(!showPassword)}
                                             edge='end' >
                                             {showPassword ? <VisibilityOff /> : <Visibility />}
                                             </IconButton>
@@ -180,7 +200,7 @@ export default function Register () {
                                     endAdornment={
                                         <InputAdornment position='end'>
                                             <IconButton
-                                            onClick={handleClickShowMatch}
+                                            onClick={() => setShowMatch(showMatch)}
                                             edge='end' >
                                             {showMatch ? <VisibilityOff /> : <Visibility />}
                                             </IconButton>

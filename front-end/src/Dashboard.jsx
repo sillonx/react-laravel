@@ -1,6 +1,6 @@
 import { useCookies } from 'react-cookie';
 
-export default function Home () {
+export default function Dashboard () {
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
     const auth = cookies.user;
     const Logout = () => {
@@ -8,7 +8,7 @@ export default function Home () {
     }
     return (
         <>
-        <h1>This is Home {auth.user.name}</h1>
+        <h1>This is Dashboard {auth.user.name}</h1>
         <button onClick={Logout}>logout</button>
         </>
     )
