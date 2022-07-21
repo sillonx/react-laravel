@@ -18,7 +18,7 @@ export default function App() {
         
         {/* Protected routes */}
         <Route element={<RequireAuth />}>
-          <Route path='/Home' element={<Home />} />
+          <Route path='/' element={<Home />} />
         </Route>
 
 

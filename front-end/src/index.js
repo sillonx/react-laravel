@@ -1,21 +1,25 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import { CookiesProvider } from 'react-cookie';
+
 import './index.css';
 import App from './App';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider } from './context/AuthProvider';
+
+import CssBaseline from '@mui/material/CssBaseline';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <AuthProvider>
-      <CssBaseline/>
-      <BrowserRouter>
+  <BrowserRouter>
+    <CookiesProvider>
+      <AuthProvider>
+        <CssBaseline/ >
         <Routes>
           <Route path="/*" element={<App />} />
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
-  </React.StrictMode>
+      </AuthProvider>
+    </CookiesProvider>
+  </BrowserRouter>
 );

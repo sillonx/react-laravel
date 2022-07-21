@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+import { Link } from 'react-router-dom';
+
 import useAuth from '../../hooks/useAuth';
 
 import axios from '../../api/axios';
@@ -9,7 +11,6 @@ Typography,
 Grid,
 Stack,
 Button,
-Link,
 OutlinedInput,
 InputAdornment,
 InputLabel,
@@ -113,7 +114,6 @@ export default function Register () {
                                     type='text'
                                     value={name}
                                     required
-                                    autoComplete='off'
                                     onChange={(e) => setName(e.target.value)}
                                     label='Username' />
                                     <FormHelperText></FormHelperText>
@@ -132,7 +132,6 @@ export default function Register () {
                                     type='email'
                                     value={email}
                                     required
-                                    autoComplete='off'
                                     onChange={(e) => setEmail(e.target.value)}
                                     label='Email' />
                                     <FormHelperText></FormHelperText>
@@ -151,7 +150,6 @@ export default function Register () {
                                     type={showPassword ? 'text' : 'password'}
                                     value={password}
                                     required
-                                    autoComplete='off'
                                     onChange={(e) => setPassword(e.target.value)}
                                     endAdornment={
                                         <InputAdornment position='end'>
@@ -178,7 +176,6 @@ export default function Register () {
                                     type={showMatch ? 'text' : 'password'}
                                     value={match}
                                     required
-                                    autoComplete='off'
                                     onChange={(e) => setMatch(e.target.value)}
                                     endAdornment={
                                         <InputAdornment position='end'>
@@ -208,7 +205,7 @@ export default function Register () {
             <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
                 <Stack direction='column' p={2}>
                 <Typography variant='subtitle1' color='text.secondary'>* : required fields</Typography>
-                <Link href='/login' variant='subtitle1'>Already have an account ?</Link>
+                <Link to='/login'>Already have an account ?</Link>
                 </Stack>
             </Grid>
         </Grid>

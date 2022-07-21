@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
-import useAuth from '../../hooks/useAuth';
+import { useCookies } from 'react-cookie';
 
+import useAuth from '../../hooks/useAuth';
 import axios from '../../api/axios';
 
 import { 
@@ -16,7 +17,8 @@ InputAdornment,
 InputLabel,
 IconButton,
 FormControl,
-FormHelperText } from '@mui/material';
+FormHelperText, 
+Checkbox } from '@mui/material';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -36,29 +38,25 @@ export default function Login () {
 
     const [errorMessage, setErrorMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
+
+    const [setCookie] = useCookies(['user']);
 
     useEffect( () => {
         setErrorMessage('');
-    }, [email, password]);
-
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    }
+    }, [email]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const loginUser = {
-            email : email,
-            password : password    
-        };
         try {
-            axios.post('login', loginUser, {headers: { 'Content-Type': 'application/json'}}).then( (res) => {
-                const accessToken = res?.data?.accessToken;
-                setAuth({ email, password, accessToken });
-                navigate(from, { replace: true });
-            });
+            const res = await axios.post('login', JSON.stringify({ email, password }), {headers: { 'Content-Type': 'application/json'}})
+            const user = res?.data?.user;
+            const accessToken = res?.data?.accessToken;
+            setAuth({ user, accessToken });
+            //setCookie('user', { user, accessToken }, {path:'/', maxAge:31536000});
+            navigate(from, { replace: true });
         } catch (err) {
-            setErrorMessage('Login Failed');
+            setErrorMessage('Login failed');
             setPassword('');
         }
     }
@@ -94,12 +92,12 @@ export default function Login () {
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 required
-                                autoComplete='off'
+                                autoComplete='on'
                                 onChange={(e) => setPassword(e.target.value)}
                                 endAdornment={
                                     <InputAdornment position='end'>
                                         <IconButton
-                                        onClick={handleClickShowPassword}
+                                        onClick={() => setShowPassword(!showPassword)}
                                         edge='end' >
                                         {showPassword ? <VisibilityOff /> : <Visibility />}
                                         </IconButton>
@@ -107,6 +105,11 @@ export default function Login () {
                                 label='Password' />
                                 <FormHelperText></FormHelperText>
                         </FormControl>
+
+                        <Stack direction='row' justifyContent='center' alignItems='center'>
+                            <Typography variant='subtitle1'>Remember me ?</Typography>
+                            <Checkbox checked={rememberMe} onChange={() => setRememberMe(!rememberMe)} />
+                        </Stack>
 
                         <Button variant='contained' type='submit' size='large'>
                             Sign In
