@@ -4,7 +4,9 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { useCookies } from 'react-cookie';
 
-import HandleRegister from '../../services/registerService';
+import axios from '../../api/axios';
+
+import { HandleRegister, HandleLogin } from '../../services/authServices';
 
 import { 
 Typography,
@@ -24,9 +26,8 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import HandleLogin from '../../services/loginService';
 
-const NAME_REGEX = /^[a-zA-Z][a-z-A-Z0-9-_]{3,24}$/;
+const NAME_REGEX = /^[a-zA-Z][a-z-A-Z0-9-_ ]{3,24}$/;
 const EMAIL_REGEX = /^[a-zA-Z][a-zA-Z0-9.-_]+@[a-zA-Z]+\.([a-zA-Z])+$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%-_]).{8,24}$/;
 
@@ -39,7 +40,9 @@ export default function Register () {
 
     const [cookies, setCookie] = useCookies(['user']);
 
-    const [role, setRole] = useState('user');
+    const [role, setRole] = useState('');
+    const [validRole, setValidRole] = useState(false);
+    const [roles, setRoles] = useState([]);
 
     const [name, setName] = useState('');
     const [validName, setValidName] = useState(false);
@@ -56,6 +59,16 @@ export default function Register () {
     const [errorMessage, setErrorMessage] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showMatch, setShowMatch] = useState(false);
+
+    useEffect( () => {
+        axios.get('/auth/roles').then( (res) => {
+            setRoles(res?.data?.roles);
+        });
+    }, []);
+
+    useEffect( () => {
+        setValidRole(role !== '');
+    }, [role]);
 
     useEffect( () => {
         setValidName(NAME_REGEX.test(name));
@@ -76,7 +89,7 @@ export default function Register () {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (!NAME_REGEX.test(name) || !EMAIL_REGEX.test(email) || !PASSWORD_REGEX.test(password) || !PASSWORD_REGEX.test(match)) {
+        if (!NAME_REGEX.test(name) || !EMAIL_REGEX.test(email) || !PASSWORD_REGEX.test(password) || !PASSWORD_REGEX.test(match) || role === '') {
             setErrorMessage('Invalid entry');
             return;
         }
@@ -84,14 +97,15 @@ export default function Register () {
             name : name,
             email : email,
             password : password,
-            role : role
+            role_id : role
         };
         const loginUser = {
             email : email,
             password : password    
         };
-        const registerStatus = await HandleRegister(newUser);
-        if (!registerStatus) {
+        try {
+            await HandleRegister(newUser);
+        } catch(err) {
             setErrorMessage('Registration failed');
         }
         try {
@@ -116,19 +130,26 @@ export default function Register () {
             <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
                 <form onSubmit={handleSubmit}>
                     <Stack direction='column' spacing={3} p={2} justifyContent='center' alignItems='center'>
-                        <FormControl fullWidth>
-                            <InputLabel>Role *</InputLabel>
-                            <Select
-                            value={role}
-                            label='Role'
-                            onChange={(e) => setRole(e.target.value)} >
-                                <MenuItem value={'user'}>User</MenuItem>
-                                <MenuItem value={'admin'}>Admin</MenuItem>
-                            </Select>
-                        </FormControl>
+                        <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
+                            <FormControl sx={{ width:250 }}>
+                                <InputLabel>Role *</InputLabel>
+                                <Select
+                                value={role}
+                                label='Role'
+                                onChange={(e) => setRole(e.target.value)} >
+                                    {roles.map( (index) =>
+                                        <MenuItem key={index.id} value={index.id}>{index.name}</MenuItem>)}
+                                </Select>
+                            </FormControl>
+                            {
+                                validRole ?
+                                <CheckCircleIcon color='success' />
+                                : <CancelIcon color='error' />
+                            }
+                        </Stack>
 
                         <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
-                            <FormControl>
+                            <FormControl  sx={{ width:250 }}>
                                 <InputLabel>Username *</InputLabel>
                                 <OutlinedInput
                                     type='text'
@@ -146,7 +167,7 @@ export default function Register () {
                         </Stack>
 
                         <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
-                            <FormControl>
+                            <FormControl  sx={{ width:250 }}>
                                 <InputLabel>Email *</InputLabel>
                                 <OutlinedInput
                                     type='email'
@@ -164,7 +185,7 @@ export default function Register () {
                         </Stack>
                         
                         <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
-                            <FormControl>
+                            <FormControl  sx={{ width:250 }}>
                                 <InputLabel>Password *</InputLabel>
                                 <OutlinedInput
                                     type={showPassword ? 'text' : 'password'}
@@ -190,7 +211,7 @@ export default function Register () {
                         </Stack>
 
                         <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
-                            <FormControl>
+                            <FormControl  sx={{ width:250 }}>
                                 <InputLabel>Confirm password *</InputLabel>
                                 <OutlinedInput
                                     type={showMatch ? 'text' : 'password'}

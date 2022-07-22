@@ -13,9 +13,9 @@ use DB;
 class UserController extends Controller {
     
     public function register(Request $request) {
-    
+
         $validator = Validator::make($request->all(),[
-            'name' => 'required|string',
+            'name' => 'required|string|min:4',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8',
             'role_id' => 'required|integer'
@@ -52,10 +52,13 @@ class UserController extends Controller {
             
         $token = $user->createToken('token')->plainTextToken;
 
+        $role = DB::table('roles')->select('public')->where('id',$user->role_id)->first();
+
         return Response()->json([   
             'message' => 'Login successful',
             'user' => $user,
-            'accessToken' => $token
+            'accessToken' => $token,
+            'role' => $role
         ], 200);
     }
 }

@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { useCookies } from 'react-cookie';
 
-import HandleLogin from '../../services/loginService';
+import { HandleLogin } from '../../services/authServices';
 
 import { 
 Typography,
