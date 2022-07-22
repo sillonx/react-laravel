@@ -5,7 +5,7 @@ export const HandleLogin = async(loginUser) => {
     return axios.post('auth/login', loginUser, {headers: { 'Content-Type': 'application/json'}}).then( (res) => {
         const user = res?.data?.user;
         const accessToken = res?.data?.accessToken;
-        const role = res?.data?.role?.public;
+        const role = res?.data?.role;
         return { user, accessToken, role };
     });
 }

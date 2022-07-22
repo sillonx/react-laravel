@@ -2,6 +2,8 @@ import { useLocation, Navigate, Outlet } from 'react-router-dom';
 
 import { useCookies } from 'react-cookie';
 
+import { isLogged } from '../api/utils';
+
 
 const RequireNotAuth = () => {
     const location = useLocation();
@@ -9,9 +11,9 @@ const RequireNotAuth = () => {
     const role = cookies?.user?.role;
 
     return (
-        role
-            ? <Navigate to='/' state={{ from: location }} replace />
-            : <Outlet />
+      isLogged(role)
+        ? <Navigate to='/' state={{ from: location }} replace />
+        : <Outlet />
     )
 }
 

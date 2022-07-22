@@ -8,7 +8,7 @@ export default function Dashboard () {
     }
     return (
         <>
-        <h1>This is Dashboard {auth.user.name}</h1>
+        <h1>Welcome to Dashboard {auth.user.name}</h1>
         <button onClick={Logout}>logout</button>
         </>
     )

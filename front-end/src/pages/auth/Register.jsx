@@ -138,7 +138,7 @@ export default function Register () {
                                 label='Role'
                                 onChange={(e) => setRole(e.target.value)} >
                                     {roles.map( (index) =>
-                                        <MenuItem key={index.id} value={index.id}>{index.name}</MenuItem>)}
+                                        <MenuItem key={index.public} value={index.public}>{index.name}</MenuItem>)}
                                 </Select>
                             </FormControl>
                             {
@@ -155,6 +155,7 @@ export default function Register () {
                                     type='text'
                                     value={name}
                                     required
+                                    autoComplete='off'
                                     onChange={(e) => setName(e.target.value)}
                                     label='Username' />
                                     <FormHelperText></FormHelperText>
@@ -173,6 +174,7 @@ export default function Register () {
                                     type='email'
                                     value={email}
                                     required
+                                    autoComplete='off'
                                     onChange={(e) => setEmail(e.target.value)}
                                     label='Email' />
                                     <FormHelperText></FormHelperText>
@@ -191,6 +193,7 @@ export default function Register () {
                                     type={showPassword ? 'text' : 'password'}
                                     value={password}
                                     required
+                                    autoComplete='off'
                                     onChange={(e) => setPassword(e.target.value)}
                                     endAdornment={
                                         <InputAdornment position='end'>
@@ -217,6 +220,7 @@ export default function Register () {
                                     type={showMatch ? 'text' : 'password'}
                                     value={match}
                                     required
+                                    autoComplete='off'
                                     onChange={(e) => setMatch(e.target.value)}
                                     endAdornment={
                                         <InputAdornment position='end'>

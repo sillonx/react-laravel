@@ -25,7 +25,7 @@ class Role extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'public',
+        'id',
         'created_at',
         'updated_at',
     ];

@@ -18,7 +18,7 @@ class UserController extends Controller {
             'name' => 'required|string|min:4',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:8',
-            'role_id' => 'required|integer'
+            'role_id' => 'required|string'
         ]);
         
         if($validator->fails()){
@@ -27,11 +27,13 @@ class UserController extends Controller {
             ], 400);
         }
         
+        $role = DB::table('roles')->select('id')->where('public',$request->input('role_id'))->first()->id;
+
         $user = User::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'password' => Hash::make($request->input('password')),
-            'role_id' => $request->input('role_id')
+            'role_id' => $role
         ]);
 
         return Response()->json([
@@ -52,7 +54,7 @@ class UserController extends Controller {
             
         $token = $user->createToken('token')->plainTextToken;
 
-        $role = DB::table('roles')->select('public')->where('id',$user->role_id)->first();
+        $role = DB::table('roles')->select('public')->where('id',$user->role_id)->first()->public;
 
         return Response()->json([   
             'message' => 'Login successful',
