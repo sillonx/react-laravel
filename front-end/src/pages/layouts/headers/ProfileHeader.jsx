@@ -4,8 +4,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useCookies } from 'react-cookie';
 
-import { isLogged } from '../../../api/utils';
-
 import { 
     Grid,
     Button,
@@ -16,43 +14,35 @@ import {
     Alert
 } from '@mui/material';
 
-import PersonIcon from '@mui/icons-material/Person';
-import LoginIcon from '@mui/icons-material/Login';
+import HomeIcon from '@mui/icons-material/Home';
 import LogoutIcon from '@mui/icons-material/Logout';
 
 import myLogo from '../../../static/images/logo.png';
 
 
-export default function HomeHeader () {
+export default function ProfileHeader () {
 
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
 
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
-    const auth = cookies.user;
 
     const location = useLocation();
     const navigate = useNavigate();
 
-    const Profile = () => {
-        navigate('/profile', { from: location, replace: false });
-    }
-
-    const Login = () => {
-        navigate('/login', { from: location, replace: false });
+    const Home = () => {
+        navigate('/', { from: location, replace: false });
     }
 
     const Logout = () => {
         try {
             removeCookie('user', {path:'/'});
-            setOpen(true);
             setMessage('Logged out successfully');
         } catch (err) {
-            setOpen(false);
             setMessage('Error during logout');
         }
     }
-  
+
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -68,32 +58,27 @@ export default function HomeHeader () {
             </Grid>
             <Grid item xs={6} sm={6} md={6} lg={6} xl={6} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
                 <Typography variant='h3' sx={{ color:'common.white', fontWeight:'bold' }}>
-                    Accueil
+                    Profil
                 </Typography>
             </Grid>
 
-            {isLogged(auth?.role) 
-            ? <Grid item xs={3} sm={3} md={3} lg={3} xl={3} justifyContent='flex-end' alignItems='center' sx={{ display:'flex' }}>
+            <Grid item xs={3} sm={3} md={3} lg={3} xl={3} justifyContent='flex-end' alignItems='center' sx={{ display:'flex' }}>
                 <Stack direction='row' spacing={2}>
-                    <Button onClick={Profile} variant='contained' size='large' endIcon={<PersonIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'primary.main', boxShadow: 10 } }}>
-                        Profile
+                    <Button onClick={Home} variant='contained' size='large' endIcon={<HomeIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'primary.main', boxShadow: 10 } }}>
+                        Home
                     </Button>
                     <Button onClick={Logout} variant='contained' size='large' endIcon={<LogoutIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'error.main', boxShadow: 10 } }}>
                         Logout
                     </Button>
                 </Stack>
             </Grid>
-            : <Grid item xs={3} sm={3} md={3} lg={3} xl={3} justifyContent='flex-end' alignItems='center' sx={{ display:'flex' }}>
-                <Button onClick={Login} variant='contained' size='large' endIcon={<LoginIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'success.main', boxShadow: 10 } }}>
-                    Login
-                </Button>
-            </Grid>
-            }
+
             <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity='info' sx={{ width: '100%' }}>
                     {message}
                 </Alert>
             </Snackbar>
         </Grid>
+        
     )
 }

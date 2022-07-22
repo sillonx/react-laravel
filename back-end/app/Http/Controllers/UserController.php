@@ -52,14 +52,14 @@ class UserController extends Controller {
         
         $user = Auth::user();
             
-        $token = $user->createToken('token')->plainTextToken;
+        //$token = $user->createToken('token')->plainTextToken;
 
         $role = DB::table('roles')->select('public')->where('id',$user->role_id)->first()->public;
 
         return Response()->json([   
             'message' => 'Login successful',
             'user' => $user,
-            'accessToken' => $token,
+            //'accessToken' => $token,
             'role' => $role
         ], 200);
     }

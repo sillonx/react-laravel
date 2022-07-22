@@ -72,7 +72,7 @@ export default function Login () {
             <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
                 <form onSubmit={handleSubmit}>
                     <Stack direction='column' spacing={3} p={2} justifyContent='center' alignItems='center'>
-                        <FormControl>
+                        <FormControl sx={{ width:250 }}>
                             <InputLabel>Email</InputLabel>
                             <OutlinedInput
                                 type='email'
@@ -84,7 +84,7 @@ export default function Login () {
                                 <FormHelperText></FormHelperText>
                         </FormControl>
 
-                        <FormControl>
+                        <FormControl sx={{ width:250 }}>
                             <InputLabel>Password</InputLabel>
                             <OutlinedInput
                                 type={showPassword ? 'text' : 'password'}
