@@ -27,3 +27,12 @@ export function isLogged(cookie) {
     }
     return false;
 }
+
+export function isAdmin(role) {
+    for (let i=0; i<ROLES.length; i++) {
+        if (ROLES[i].name === 'Admin' && ROLES[i].public === role) {
+            return true;
+        }
+    }
+    return false;
+}

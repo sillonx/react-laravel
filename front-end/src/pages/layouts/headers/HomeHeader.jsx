@@ -4,19 +4,23 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { useCookies } from 'react-cookie';
 
-import { isLogged } from '../../../api/utils';
+import { isLogged, isAdmin } from '../../../api/utils';
 
 import { 
     Grid,
     Button,
     Typography,
     Avatar,
-    Stack,
     Snackbar,
-    Alert
+    Alert,
+    IconButton,
+    MenuItem,
+    Menu
 } from '@mui/material';
 
+import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
+import ShieldIcon from '@mui/icons-material/Shield';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 
@@ -25,7 +29,10 @@ import myLogo from '../../../static/images/logo.png';
 
 export default function HomeHeader () {
 
-    const [open, setOpen] = useState(false);
+    const [anchorMenu, setAnchorMenu] = useState(null);
+    const openMenu = Boolean(anchorMenu);
+
+    const [openSnackbar, setOpenSnackbar] = useState(false);
     const [message, setMessage] = useState('');
 
     const [cookies, setCookie, removeCookie] = useCookies(['user']);
@@ -34,30 +41,42 @@ export default function HomeHeader () {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const Profile = () => {
+    const handleProfile = () => {
         navigate('/profile', { from: location, replace: false });
     }
 
-    const Login = () => {
+    const handleDashboard = () => {
+        navigate('/dashboard', { from: location, replace: false });
+    }
+
+    const handleLogin = () => {
         navigate('/login', { from: location, replace: false });
     }
 
-    const Logout = () => {
+    const handleLogout = () => {
         try {
             removeCookie('user', {path:'/'});
-            setOpen(true);
+            setOpenSnackbar(true);
             setMessage('Logged out successfully');
         } catch (err) {
-            setOpen(false);
+            setOpenSnackbar(false);
             setMessage('Error during logout');
         }
     }
   
-    const handleClose = (event, reason) => {
+    const handleCloseSnackbar = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-        setOpen(false);
+        setOpenSnackbar(false);
+    };
+
+    const handleClickMenu = (e) => {
+        setAnchorMenu(e.currentTarget);
+    }
+
+    const handleCloseMenu = () => {
+        setAnchorMenu(null);
     };
 
 
@@ -72,25 +91,45 @@ export default function HomeHeader () {
                 </Typography>
             </Grid>
 
-            {isLogged(auth?.role) 
-            ? <Grid item xs={3} sm={3} md={3} lg={3} xl={3} justifyContent='flex-end' alignItems='center' sx={{ display:'flex' }}>
-                <Stack direction='row' spacing={2}>
-                    <Button onClick={Profile} variant='contained' size='large' endIcon={<PersonIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'primary.main', boxShadow: 10 } }}>
-                        Profile
-                    </Button>
-                    <Button onClick={Logout} variant='contained' size='large' endIcon={<LogoutIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'error.main', boxShadow: 10 } }}>
-                        Logout
-                    </Button>
-                </Stack>
+            
+            <Grid item xs={3} sm={3} md={3} lg={3} xl={3} justifyContent='flex-end' alignItems='center' sx={{ display:'flex' }}>
+                <IconButton onClick={handleClickMenu} size='large' sx={{ color:'common.white' }}>
+                    <MenuIcon />
+                </IconButton>
+                <Menu open={openMenu} onClose={handleCloseMenu} anchorEl={anchorMenu}>
+                    {isLogged(auth?.role) &&
+                    <MenuItem onClick={handleProfile} fullWidth>
+                        <Grid container direction='row' justifyContent='center' alignItems='center' spacing={1} sx={{ display:'flex' }}>
+                            <Grid item justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
+                                <PersonIcon />
+                            </Grid>
+                            <Grid item justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
+                                <Typography>Profile</Typography>
+                            </Grid>
+                        </Grid>
+                    </MenuItem> }
+                    {isAdmin(auth?.role) &&
+                    <MenuItem>
+                        <Button onClick={handleDashboard} fullWidth variant='outlined' size='large' endIcon={<ShieldIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'primary.main', boxShadow: 10 } }}>
+                            Dashboard
+                        </Button>
+                    </MenuItem> }
+                    {isLogged(auth?.role) &&
+                    <MenuItem>
+                        <Button onClick={handleLogout} fullWidth variant='outlined' size='large' endIcon={<LogoutIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'error.main', boxShadow: 10 } }}>
+                            Logout
+                        </Button>
+                    </MenuItem> }
+                    {!isLogged(auth?.role) &&
+                    <MenuItem>
+                        <Button onClick={handleLogin} fullWidth variant='outlined' size='large' endIcon={<LoginIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'success.main', boxShadow: 10 } }}>
+                            Login
+                        </Button>
+                    </MenuItem> }
+                </Menu>
             </Grid>
-            : <Grid item xs={3} sm={3} md={3} lg={3} xl={3} justifyContent='flex-end' alignItems='center' sx={{ display:'flex' }}>
-                <Button onClick={Login} variant='contained' size='large' endIcon={<LoginIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'success.main', boxShadow: 10 } }}>
-                    Login
-                </Button>
-            </Grid>
-            }
-            <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity='info' sx={{ width: '100%' }}>
+            <Snackbar open={openSnackbar} autoHideDuration={3000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity='info' sx={{ width: '100%' }}>
                     {message}
                 </Alert>
             </Snackbar>
