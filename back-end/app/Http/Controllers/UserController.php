@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Cookie;
 use Auth;
 use DB;
 
@@ -51,16 +52,48 @@ class UserController extends Controller {
         }
         
         $user = Auth::user();
-            
-        //$token = $user->createToken('token')->plainTextToken;
+        
+        $token = $user->createToken('token')->plainTextToken;
 
-        $role = DB::table('roles')->select('public')->where('id',$user->role_id)->first()->public;
+        if ($request->remember) {
+            $cookie = cookie('jwt', $token, 60*24*365); // one year
+        }
+        else {
+            $cookie = cookie('jwt', $token, 60); // one hour
+        }
 
         return Response()->json([   
             'message' => 'Login successful',
             'user' => $user,
-            //'accessToken' => $token,
-            'role' => $role
-        ], 200);
+            'permissions' => ['admin']
+        ], 200)->withCookie($cookie);
+    }
+
+    public function logout() {
+
+        $cookie = Cookie::forget('jwt');
+
+        return Response()->json([
+            'message' => 'Logout successful'
+        ], 200)->withCookie($cookie);
+    }
+
+    public function verify(Request $request) {
+
+        [$id, $token] = explode('|', $request->cookie('jwt'), 2);
+        $accessToken = DB::table('personal_access_tokens')->where('id', $id)->first();
+        if (hash_equals($accessToken->token, hash('sha256', $token))) {
+            $user = DB::table('Users')->select('name','email','created_at')->where('id', $accessToken->tokenable_id)->first();
+            return Response()->json([
+                'message' => 'Valid token',
+                'user' => $user,
+                'permissions' => ['admin']
+            ], 200);
+        }
+        else {
+            return Response()->json([
+                'message' => 'Invalid token'
+            ], 401);
+        }
     }
 }

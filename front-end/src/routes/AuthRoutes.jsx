@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom';
 
 import { findPublic } from '../api/utils';
 
-import RequireAuth from '../components/RequireAuth';
+import RequireAuth from './components/RequireAuth';
 
 import Dashboard from '../pages/Dashboard';
 import Profile from '../pages/Profile';

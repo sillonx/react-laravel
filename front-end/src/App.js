@@ -4,7 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 
 import { useCookies } from 'react-cookie'
 
-import MyRoutes from './routes';
+import MyRoutes from './routes/index';
 import Header from './pages/layouts/headers';
 import Footer from './pages/layouts/footers';
 

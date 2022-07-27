@@ -2,8 +2,8 @@ import { Routes, Route, Outlet } from 'react-router-dom';
 
 import { findPublic } from '../api/utils';
 
-import RequireAuth from '../components/RequireAuth';
-import RequireNotAuth from '../components/RequireNotAuth';
+import RequireAuth from './components/RequireAuth';
+import RequireNotAuth from './components/RequireNotAuth';
 
 import Register from '../pages/auth/Register';
 import Login from '../pages/auth/Login';

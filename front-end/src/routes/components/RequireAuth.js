@@ -1,20 +1,21 @@
 import { useLocation, Navigate, Outlet } from 'react-router-dom';
 
-import { useCookies } from 'react-cookie';
+import { useSelector } from 'react-redux';
 
 
-const RequireAuth = ({ allowedRoles }) => {
+const RequireAuth = ({ permission }) => {
     const location = useLocation();
-    const [cookies] = useCookies(['user']);
-    const role = cookies?.user?.role;
+    const user = useSelector( (state) => state.auth);
 
     return (
-        allowedRoles?.includes(role)
+        user.permissions.includes(permission)
             ? <Outlet />
-            : role === 118
+            : user.name !== ''
                 ? <Navigate to='/unauthorized' state={{ from: location }} replace />
                 : <Navigate to='/login' state={{ from: location }} replace />
     )
 }
 
 export default RequireAuth;
+
+// typeof user?.name !== 'undefined'

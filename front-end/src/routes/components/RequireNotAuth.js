@@ -1,17 +1,14 @@
 import { useLocation, Navigate, Outlet } from 'react-router-dom';
 
-import { useCookies } from 'react-cookie';
-
-import { isLogged } from '../api/utils';
+import { useSelector } from 'react-redux';
 
 
 const RequireNotAuth = () => {
     const location = useLocation();
-    const [cookies] = useCookies(['user']);
-    const role = cookies?.user?.role;
+    const user = useSelector( (state) => state.auth);
 
     return (
-      isLogged(role)
+      user?.name !== ''
         ? <Navigate to='/' state={{ from: location }} replace />
         : <Outlet />
     )

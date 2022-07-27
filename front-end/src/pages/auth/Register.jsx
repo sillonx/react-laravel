@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react';
 
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
+import { useDispatch } from 'react-redux';
+
 import { useCookies } from 'react-cookie';
 
 import axios from '../../api/axios';
 
 import { HandleRegister, HandleLogin } from '../../services/authServices';
+
+import { login } from '../../store/reducers/auth';
 
 import { 
 Typography,
@@ -60,6 +64,8 @@ export default function Register () {
     const [showPassword, setShowPassword] = useState(false);
     const [showMatch, setShowMatch] = useState(false);
 
+    const dispatch = useDispatch();
+
     useEffect( () => {
         axios.get('/auth/roles').then( (res) => {
             setRoles(res?.data?.roles);
@@ -101,7 +107,8 @@ export default function Register () {
         };
         const loginUser = {
             email : email,
-            password : password    
+            password : password,
+            remember : false
         };
         try {
             await HandleRegister(newUser);
@@ -109,8 +116,8 @@ export default function Register () {
             setErrorMessage('Registration failed');
         }
         try {
-            const newCookie = await HandleLogin(loginUser);
-            setCookie('user', newCookie, {path:'/'});
+            const resAPI = await HandleLogin(loginUser);
+            dispatch(login({ resAPI }));
             navigate(from, { replace: true });
         } catch(err) {
             setErrorMessage('Auto login failed');

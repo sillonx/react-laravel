@@ -2,9 +2,13 @@ import { useState, useEffect } from 'react';
 
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
+import { useDispatch } from 'react-redux';
+
 import { useCookies } from 'react-cookie';
 
 import { HandleLogin } from '../../services/authServices';
+
+import { login } from '../../store/reducers/auth';
 
 import { 
 Typography,
@@ -39,19 +43,23 @@ export default function Login () {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
 
+    const dispatch = useDispatch();
+
     useEffect( () => {
         setErrorMessage('');
     }, [email]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrorMessage('');
         const loginUser = {
             email : email,
-            password : password    
+            password : password,
+            remember : rememberMe    
         };
         try {
-            const newCookie = await HandleLogin(loginUser);
-            rememberMe ? setCookie('user', newCookie, {path:'/', maxAge:31536000}) : setCookie('user', newCookie, {path:'/'})
+            const resAPI = await HandleLogin(loginUser);
+            dispatch(login({ resAPI }));
             navigate(from, { replace: true });
         } catch (err) {
             setErrorMessage('Login failed');
