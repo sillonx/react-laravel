@@ -80,20 +80,27 @@ class UserController extends Controller {
 
     public function verify(Request $request) {
 
-        [$id, $token] = explode('|', $request->cookie('jwt'), 2);
-        $accessToken = DB::table('personal_access_tokens')->where('id', $id)->first();
-        if (hash_equals($accessToken->token, hash('sha256', $token))) {
-            $user = DB::table('Users')->select('name','email','created_at')->where('id', $accessToken->tokenable_id)->first();
-            return Response()->json([
-                'message' => 'Valid token',
-                'user' => $user,
-                'permissions' => ['admin']
-            ], 200);
+        try {
+            [$id, $token] = explode('|', $request->cookie('jwt'), 2);
+            $accessToken = DB::table('personal_access_tokens')->where('id', $id)->first();
+            if (hash_equals($accessToken->token, hash('sha256', $token))) {
+                $user = DB::table('Users')->select('name','email','created_at')->where('id', $accessToken->tokenable_id)->first();
+                return Response()->json([
+                    'message' => 'Valid token',
+                    'user' => $user,
+                    'permissions' => ['admin']
+                ], 200);
+            }
+            else {
+                return Response()->json([
+                    'message' => 'Invalid token'
+                ], 401);
+            }
         }
-        else {
+        catch (Exception $e) {
             return Response()->json([
-                'message' => 'Invalid token'
-            ], 401);
+                'message' => 'No cookie found'
+            ], 400);
         }
     }
 }

@@ -1,12 +1,12 @@
 import { useLocation } from 'react-router-dom';
 
-import HomeHeader from './HomeHeader';
-import ProfileHeader from './ProfileHeader';
-import LoginHeader from './LoginHeader';
-import DefaultHeader from './DefaultHeader';
+import HomeHeader from './homeHeader';
+import ProfileHeader from './profileHeader';
+import LoginHeader from './loginHeader';
+import DefaultHeader from './defaultHeader';
 
 
-export default function Header() {
+export default function Headers() {
     const location = useLocation().pathname;
 
     function ChoseHeader() {

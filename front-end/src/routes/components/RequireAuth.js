@@ -8,14 +8,12 @@ const RequireAuth = ({ permission }) => {
     const user = useSelector( (state) => state.auth);
 
     return (
-        user.permissions.includes(permission)
+        user?.permissions.includes(permission)
             ? <Outlet />
-            : user.name !== ''
+            : user?.status
                 ? <Navigate to='/unauthorized' state={{ from: location }} replace />
                 : <Navigate to='/login' state={{ from: location }} replace />
     )
 }
 
 export default RequireAuth;
-
-// typeof user?.name !== 'undefined'

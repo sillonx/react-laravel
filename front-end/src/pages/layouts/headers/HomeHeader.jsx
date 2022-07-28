@@ -1,10 +1,12 @@
 import { useState } from 'react';
 
+import { useSelector, useDispatch } from 'react-redux';
+
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { useCookies } from 'react-cookie';
+import { HandleLogout } from '../../../services/authServices';
 
-import { isLogged, isAdmin } from '../../../api/utils';
+import { logout } from '../../../store/reducers/auth'; 
 
 import { 
     Grid,
@@ -35,11 +37,12 @@ export default function HomeHeader () {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [message, setMessage] = useState('');
 
-    const [cookies, setCookie, removeCookie] = useCookies(['user']);
-    const auth = cookies.user;
 
     const location = useLocation();
     const navigate = useNavigate();
+
+    const user = useSelector( (state) => state.auth);
+    const dispatch = useDispatch();
 
     const handleProfile = () => {
         navigate('/profile', { from: location, replace: false });
@@ -53,13 +56,12 @@ export default function HomeHeader () {
         navigate('/login', { from: location, replace: false });
     }
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         try {
-            removeCookie('user', {path:'/'});
-            setOpenSnackbar(true);
-            setMessage('Logged out successfully');
+            const resAPI = await HandleLogout();
+            dispatch(logout({}));
+            setMessage(resAPI);
         } catch (err) {
-            setOpenSnackbar(false);
             setMessage('Error during logout');
         }
     }
@@ -97,8 +99,8 @@ export default function HomeHeader () {
                     <MenuIcon />
                 </IconButton>
                 <Menu open={openMenu} onClose={handleCloseMenu} anchorEl={anchorMenu}>
-                    {isLogged(auth?.role) &&
-                    <MenuItem onClick={handleProfile} fullWidth>
+                    {user?.status &&
+                    <MenuItem onClick={handleProfile} fullwidth='true'>
                         <Grid container direction='row' justifyContent='center' alignItems='center' spacing={1} sx={{ display:'flex' }}>
                             <Grid item justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
                                 <PersonIcon />
@@ -108,21 +110,21 @@ export default function HomeHeader () {
                             </Grid>
                         </Grid>
                     </MenuItem> }
-                    {isAdmin(auth?.role) &&
+                    {user?.permissions.includes('admin') &&
                     <MenuItem>
-                        <Button onClick={handleDashboard} fullWidth variant='outlined' size='large' endIcon={<ShieldIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'primary.main', boxShadow: 10 } }}>
+                        <Button onClick={handleDashboard} fullwidth='true' variant='outlined' size='large' endIcon={<ShieldIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'primary.main', boxShadow: 10 } }}>
                             Dashboard
                         </Button>
                     </MenuItem> }
-                    {isLogged(auth?.role) &&
+                    {user?.status &&
                     <MenuItem>
-                        <Button onClick={handleLogout} fullWidth variant='outlined' size='large' endIcon={<LogoutIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'error.main', boxShadow: 10 } }}>
+                        <Button onClick={handleLogout} fullwidth='true' variant='outlined' size='large' endIcon={<LogoutIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'error.main', boxShadow: 10 } }}>
                             Logout
                         </Button>
                     </MenuItem> }
-                    {!isLogged(auth?.role) &&
+                    {!user?.status &&
                     <MenuItem>
-                        <Button onClick={handleLogin} fullWidth variant='outlined' size='large' endIcon={<LoginIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'success.main', boxShadow: 10 } }}>
+                        <Button onClick={handleLogin} fullwidth='true' variant='outlined' size='large' endIcon={<LoginIcon />} sx={{ boxShadow: 5, color:'primary.main', backgroundColor:'common.white', '&:hover': { color:'common.white', backgroundColor:'success.main', boxShadow: 10 } }}>
                             Login
                         </Button>
                     </MenuItem> }

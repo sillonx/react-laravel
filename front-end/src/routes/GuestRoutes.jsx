@@ -1,9 +1,9 @@
 import { Outlet } from 'react-router-dom';
 
-import RequireNotAuth from './components/RequireNotAuth';
+import RequireNotAuth from './components/requireNotAuth';
 
-import Login from '../pages/auth/Login';
-import Register from '../pages/auth/Register';
+import Login from '../pages/auth/login';
+import Register from '../pages/auth/register';
 
 
 const GuestRoutes = {

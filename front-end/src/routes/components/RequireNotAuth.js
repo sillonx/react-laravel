@@ -8,7 +8,7 @@ const RequireNotAuth = () => {
     const user = useSelector( (state) => state.auth);
 
     return (
-      user?.name !== ''
+      user?.status
         ? <Navigate to='/' state={{ from: location }} replace />
         : <Outlet />
     )

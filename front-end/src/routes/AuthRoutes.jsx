@@ -1,11 +1,9 @@
 import { Outlet } from 'react-router-dom';
 
-import { findPublic } from '../api/utils';
+import RequireAuth from './components/requireAuth';
 
-import RequireAuth from './components/RequireAuth';
-
-import Dashboard from '../pages/Dashboard';
-import Profile from '../pages/Profile';
+import Dashboard from '../pages/dashboard';
+import Profile from '../pages/profile';
 
 
 const AuthRoutes = {
@@ -13,7 +11,7 @@ const AuthRoutes = {
     element: <Outlet />,
     children: [
         {
-            element: <RequireAuth allowedRoles={findPublic(['User','Admin'])} />,
+            element: <RequireAuth permission={'user'} />,
             children: [
                 {
                     path: 'profile',
@@ -22,7 +20,7 @@ const AuthRoutes = {
             ]
         },
         {
-            element: <RequireAuth allowedRoles={findPublic(['Admin'])} />,
+            element: <RequireAuth permission={'admin'} />,
             children: [
                 {
                     path: 'dashboard',

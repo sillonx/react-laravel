@@ -1,11 +1,11 @@
 import { useLocation } from 'react-router-dom';
 
-import HomeFooter from './HomeFooter';
-import LoginFooter from './LoginFooter';
-import DefaultFooter from './DefaultFooter';
+import HomeFooter from './homeFooter';
+import LoginFooter from './loginFooter';
+import DefaultFooter from './defaultFooter';
 
 
-export default function Footer() {
+export default function Footers() {
     const location = useLocation().pathname;
 
     function ChoseFooter() {

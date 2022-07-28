@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-import Home from '../pages/Home';
+import Home from '../pages/home';
 import Error401 from '../pages/errors/401';
 import Error404 from '../pages/errors/404';
 

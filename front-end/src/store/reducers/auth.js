@@ -8,7 +8,8 @@ const initialState = {
     name: '',
     email: '',
     created_at: '',
-    permissions: []
+    permissions: [],
+    status: false
 }
 
 const auth = createSlice({
@@ -16,16 +17,18 @@ const auth = createSlice({
     initialState,
     reducers: {
         login (state, action) {
-            state.name = action.payload.resAPI.user.name;
-            state.email = action.payload.resAPI.user.email;
-            state.created_at = action.payload.resAPI.user.created_at;
+            state.name = action.payload.resAPI.name;
+            state.email = action.payload.resAPI.email;
+            state.created_at = action.payload.resAPI.created_at;
             state.permissions = action.payload.resAPI.permissions;
+            state.status = true;
         },
         logout (state, action) {
             state.name = '';
             state.email = '';
             state.created_at = '';
             state.permissions = [];
+            state.status = false;
         }
     }
 });
