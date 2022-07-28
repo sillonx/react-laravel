@@ -1,7 +1,7 @@
 import axios from '../api/axios';
 
 
-export const HandleRegister = async (newUser) => {
+export const RegisterAPI = async (newUser) => {
 
     return axios.post('auth/register', newUser, {headers: { 'Content-Type': 'application/json'}})
     .then( (res) => {
@@ -13,7 +13,7 @@ export const HandleRegister = async (newUser) => {
     })
 }
 
-export const HandleLogin = async (loginUser) => {
+export const LoginAPI = async (loginUser) => {
     return axios.post('auth/login', loginUser, {withCredentials:true})
     .then( (res) => {
         const name = res?.data?.user?.name;
@@ -27,7 +27,7 @@ export const HandleLogin = async (loginUser) => {
     })
 }
 
-export const HandleLogout = async () => {
+export const LogoutAPI = async () => {
     return axios.post('auth/logout', {}, {withCredentials:true})
     .then( (res) => {
         return res?.data?.message;

@@ -4,11 +4,9 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 
-import { useCookies } from 'react-cookie';
-
 import axios from '../../api/axios';
 
-import { HandleRegister, HandleLogin } from '../../services/authServices';
+import { RegisterAPI, LoginAPI } from '../../services/authServices';
 
 import { login } from '../../store/reducers/auth';
 
@@ -41,8 +39,6 @@ export default function Register () {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
-
-    const [cookies, setCookie] = useCookies(['user']);
 
     const [role, setRole] = useState('');
     const [validRole, setValidRole] = useState(false);
@@ -113,13 +109,13 @@ export default function Register () {
             remember : false
         };
         try {
-            const resAPI = await HandleRegister(newUser);
+            const resAPI = await RegisterAPI(newUser);
             setSuccessMessage(resAPI);
         } catch(err) {
             setErrorMessage('Registration failed');
         }
         try {
-            const resAPI = await HandleLogin(loginUser);
+            const resAPI = await LoginAPI(loginUser);
             dispatch(login({ resAPI }));
             navigate(from, { replace: true });
         } catch(err) {
@@ -236,7 +232,7 @@ export default function Register () {
                                     endAdornment={
                                         <InputAdornment position='end'>
                                             <IconButton
-                                            onClick={() => setShowMatch(showMatch)}
+                                            onClick={() => setShowMatch(!showMatch)}
                                             edge='end' >
                                             {showMatch ? <VisibilityOff /> : <Visibility />}
                                             </IconButton>

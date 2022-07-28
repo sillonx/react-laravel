@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import { HandleLogout } from '../../../services/authServices';
+import { LogoutAPI } from '../../../services/authServices';
 
 import { logout } from '../../../store/reducers/auth'; 
 
@@ -58,7 +58,7 @@ export default function HomeHeader () {
 
     const handleLogout = async () => {
         try {
-            const resAPI = await HandleLogout();
+            const resAPI = await LogoutAPI();
             dispatch(logout({}));
             setMessage(resAPI);
         } catch (err) {

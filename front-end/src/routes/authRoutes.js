@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-import RequireAuth from './components/requireAuth';
+import RequireAuth from './middleware/requireAuth';
 
 import Dashboard from '../pages/user/dashboard';
 import Profile from '../pages/user/profile';

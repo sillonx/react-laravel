@@ -4,9 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 
-import { useCookies } from 'react-cookie';
-
-import { HandleLogin } from '../../services/authServices';
+import { LoginAPI } from '../../services/authServices';
 
 import { login } from '../../store/reducers/auth';
 
@@ -33,8 +31,6 @@ export default function Login () {
     const location = useLocation();
     const from = location.state?.from?.pathname || "/";
 
-    const [cookies, setCookie] = useCookies(['user']);
-
     const [email, setEmail] = useState('');
 
     const [password, setPassword] = useState('');
@@ -58,7 +54,7 @@ export default function Login () {
             remember : rememberMe    
         };
         try {
-            const resAPI = await HandleLogin(loginUser);
+            const resAPI = await LoginAPI(loginUser);
             dispatch(login({ resAPI }));
             navigate(from, { replace: true });
         } catch (err) {

@@ -65,7 +65,7 @@ class UserController extends Controller {
         return Response()->json([   
             'message' => 'Login successful',
             'user' => $user,
-            'permissions' => ['admin']
+            'permissions' => ['admin','user']
         ], 200)->withCookie($cookie);
     }
 
@@ -78,9 +78,10 @@ class UserController extends Controller {
         ], 200)->withCookie($cookie);
     }
 
+    // Donner age au token
     public function verify(Request $request) {
 
-        try {
+        if ($request->hasCookie('jwt') != false) {
             [$id, $token] = explode('|', $request->cookie('jwt'), 2);
             $accessToken = DB::table('personal_access_tokens')->where('id', $id)->first();
             if (hash_equals($accessToken->token, hash('sha256', $token))) {
@@ -88,18 +89,18 @@ class UserController extends Controller {
                 return Response()->json([
                     'message' => 'Valid token',
                     'user' => $user,
-                    'permissions' => ['admin']
+                    'permissions' => ['admin','user']
                 ], 200);
             }
             else {
                 return Response()->json([
-                    'message' => 'Invalid token'
+                    'message' => 'Token is invalid'
                 ], 401);
             }
         }
-        catch (Exception $e) {
+        else {
             return Response()->json([
-                'message' => 'No cookie found'
+                'message' => 'No token was found'
             ], 400);
         }
     }
