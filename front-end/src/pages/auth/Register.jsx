@@ -61,6 +61,8 @@ export default function Register () {
     const [validMatch, setValidMatch] = useState(false);
 
     const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
+
     const [showPassword, setShowPassword] = useState(false);
     const [showMatch, setShowMatch] = useState(false);
 
@@ -96,7 +98,7 @@ export default function Register () {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!NAME_REGEX.test(name) || !EMAIL_REGEX.test(email) || !PASSWORD_REGEX.test(password) || !PASSWORD_REGEX.test(match) || role === '') {
-            setErrorMessage('Invalid entry');
+            setErrorMessage('Some fields may be invalid');
             return;
         }
         const newUser = {
@@ -111,7 +113,8 @@ export default function Register () {
             remember : false
         };
         try {
-            await HandleRegister(newUser);
+            const resAPI = await HandleRegister(newUser);
+            setSuccessMessage(resAPI);
         } catch(err) {
             setErrorMessage('Registration failed');
         }
@@ -130,6 +133,7 @@ export default function Register () {
             <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
                 <Stack direction='column' spacing={2} p={2}>
                     <Typography variant='h3'>Register</Typography>
+                    <Typography variant='h5' color='success'>{successMessage ? successMessage : ''}</Typography>
                     <Typography variant='h5' color='error'>{errorMessage ? errorMessage : ''}</Typography>
                 </Stack>
             </Grid>

@@ -17,10 +17,10 @@ const auth = createSlice({
     initialState,
     reducers: {
         login (state, action) {
-            state.name = action.payload.resAPI.name;
-            state.email = action.payload.resAPI.email;
-            state.created_at = action.payload.resAPI.created_at;
-            state.permissions = action.payload.resAPI.permissions;
+            state.name = action?.payload?.resAPI?.name;
+            state.email = action?.payload?.resAPI?.email;
+            state.created_at = action?.payload?.resAPI?.created_at;
+            state.permissions = action?.payload?.resAPI?.permissions;
             state.status = true;
         },
         logout (state, action) {

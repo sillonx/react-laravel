@@ -1,8 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 
-import { login, logout } from '../store/reducers/auth';
-
-import { HandleLogout } from '../services/authServices';
+import { login } from '../store/reducers/auth';
 
 import Headers from './layouts/headers';
 import Footers from './layouts/footers';

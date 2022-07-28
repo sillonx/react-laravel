@@ -13,6 +13,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { useCookies } from 'react-cookie'
 
 import MyRoutes from './routes/index';
+import Loading from './pages/loading';
 
 import LightTheme from './themes/light';
 import DarkTheme from './themes/dark';
@@ -35,7 +36,7 @@ export default function App() {
             setLoading(false);
         })
         .catch( (function (error) {
-            console.log('ici')
+            console.log('[SERVER] The above error occured because: "' + error.response.data.message + '"');
             setLoading(false);
         }));
     }, [setLoading]);
@@ -43,7 +44,7 @@ export default function App() {
     return (
         <ThemeProvider theme={cookies.mode === 'dark' ? DarkTheme : LightTheme}>
             <CssBaseline/>  
-            {loading ? <div>Loading</div> : <MyRoutes/>}   
+            {loading ? <Loading /> : <MyRoutes />}   
         </ThemeProvider>
     );
 }

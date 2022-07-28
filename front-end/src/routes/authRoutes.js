@@ -2,8 +2,8 @@ import { Outlet } from 'react-router-dom';
 
 import RequireAuth from './components/requireAuth';
 
-import Dashboard from '../pages/dashboard';
-import Profile from '../pages/profile';
+import Dashboard from '../pages/user/dashboard';
+import Profile from '../pages/user/profile';
 
 
 const AuthRoutes = {
