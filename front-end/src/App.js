@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 
 import { useDispatch } from 'react-redux';
 
-import axios from './api/axios';
+import axios from './api/Axios';
 
-import { login } from './store/reducers/auth';
+import { login } from './store/reducers/Auth';
 
 import CssBaseline from '@mui/material/CssBaseline';
 
@@ -13,10 +13,10 @@ import { ThemeProvider } from '@mui/material/styles';
 import { useCookies } from 'react-cookie'
 
 import MyRoutes from './routes';
-import Loading from './pages/loading';
+import Loading from './pages/public/Loading';
 
-import LightTheme from './themes/light';
-import DarkTheme from './themes/dark';
+import LightTheme from './themes/Light';
+import DarkTheme from './themes/Dark';
 
 export default function App() {
 
@@ -25,21 +25,22 @@ export default function App() {
     const [cookies] = useCookies(['mode']);
 
     useEffect( () => {
-        axios.post('auth/verify', {}, {withCredentials:true})
+        axios.post('auth/verifyToken', {}, {withCredentials:true})
         .then( (res) => {
-            const name = res?.data?.user?.name;
-            const email = res?.data?.user?.email;
-            const created_at = res?.data?.user?.created_at;
-            const permissions = res?.data?.permissions;
-            const resAPI = { name, email, created_at, permissions };
-            dispatch(login({ resAPI }));
+            if (res?.data?.status === 200) {
+                const name = res?.data?.user?.name;
+                const email = res?.data?.user?.email;
+                const created_at = res?.data?.user?.created_at;
+                const permissions = res?.data?.permissions;
+                const resAPI = { name, email, created_at, permissions };
+                dispatch(login({ resAPI }));
+            }
             setLoading(false);
         })
-        .catch( (function (error) {
-            console.log('[SERVER] The above error occured because: "' + error.response.data.message + '"');
+        .catch(function (error) {
             setLoading(false);
-        }));
-    }, [setLoading]);
+        });
+    }, []);
 
     return (
         <ThemeProvider theme={cookies.mode === 'dark' ? DarkTheme : LightTheme}>

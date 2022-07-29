@@ -7,13 +7,13 @@ import {
 } from '@mui/material';
 
 
-export default function Dashboard() {
+export default function Settings() {
     
     return (
         <>
             <Headers />
             <Navbar />
-            <Typography>Welcome to the dashboard page</Typography>
+            <Typography>Welcome to the settings page</Typography>
             <Footers />
         </>
     )

@@ -1,29 +1,34 @@
 import { Outlet } from 'react-router-dom';
 
-import RequireAuth from './middleware/requireAuth';
+import RequireAuth from './middleware/RequireAuth';
 
-import Dashboard from '../pages/user/dashboard';
-import Profile from '../pages/user/profile';
+import Dashboard from '../pages/user/Dashboard';
+import Profile from '../pages/user/Profile';
 
+
+export const AUTH_ROUTES = [
+    'profile',
+    'dashboard'
+]
 
 const AuthRoutes = {
     path: '/',
     element: <Outlet />,
     children: [
         {
-            element: <RequireAuth permission={'user'} />,
+            element: <RequireAuth permission={'Profile'} />,
             children: [
                 {
-                    path: 'profile',
+                    path: AUTH_ROUTES[0],
                     element: <Profile />
                 }
             ]
         },
         {
-            element: <RequireAuth permission={'admin'} />,
+            element: <RequireAuth permission={'Dashboard'} />,
             children: [
                 {
-                    path: 'dashboard',
+                    path: AUTH_ROUTES[1],
                     element: <Dashboard />
                 }
             ]

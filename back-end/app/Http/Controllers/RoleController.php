@@ -7,9 +7,11 @@ use App\Models\Role;
 
 class RoleController extends Controller
 {
-    public function roles() {
+    public function getRoles() {
+        // Get all roles
         $roles = Role::all();
 
+        // Return them
         return Response()->json([
             'roles' => $roles
         ], 200);

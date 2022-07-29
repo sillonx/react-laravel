@@ -22,10 +22,11 @@ class Role extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'id',
-        'name',
         'created_at',
         'updated_at',
     ];
 
-}
+    public function permissions() {
+        return $this->belongsToMany(Permission::class);
+    }
+}   

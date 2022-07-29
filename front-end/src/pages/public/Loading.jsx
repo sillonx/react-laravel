@@ -29,7 +29,7 @@ export default function Loading() {
 
     return (
         <>
-            <Grid container direction='column' justifyContent='center' alignItems='center' pt='10%' spacing={2} sx={{ display:'flex' }}>
+            <Grid container direction='column' justifyContent='center' alignItems='center' py='10%' spacing={2} sx={{ display:'flex' }}>
                 <Grid item justifyContent='center' alignItems='center' p={3} sx={{ display:'flex' }}>
                     <Typography variant='h4'>{loadingText}</Typography>
                 </Grid>

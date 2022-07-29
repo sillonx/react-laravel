@@ -1,9 +1,9 @@
 import { useLocation } from 'react-router-dom';
 
-import HomeHeader from './homeHeader';
-import ProfileHeader from './profileHeader';
-import LoginHeader from './loginHeader';
-import DefaultHeader from './defaultHeader';
+import HomeHeader from './HomeHeader';
+import ProfileHeader from './ProfileHeader';
+import LoginHeader from './LoginHeader';
+import DefaultHeader from './DefaultHeader';
 
 
 export default function Headers() {

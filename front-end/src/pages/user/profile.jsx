@@ -1,8 +1,20 @@
+import Headers from '../layouts/headers';
+import Footers from '../layouts/footers';
+import Navbar from '../layouts/Navbar';
 
-export default function Profile () {
+import { 
+    Typography 
+} from '@mui/material';
 
 
+export default function Profile() {
+    
     return (
-        <h1>This is your profile</h1>
+        <>
+            <Headers />
+            <Navbar />
+            <Typography>Welcome to the profile page</Typography>
+            <Footers />
+        </>
     )
 }

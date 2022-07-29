@@ -22,8 +22,6 @@ class Permission extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'id',
-        'name',
         'created_at',
         'updated_at',
     ];

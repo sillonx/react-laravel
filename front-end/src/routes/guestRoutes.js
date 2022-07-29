@@ -1,10 +1,15 @@
 import { Outlet } from 'react-router-dom';
 
-import RequireNotAuth from './middleware/requireNotAuth';
+import RequireNotAuth from './middleware/RequireNotAuth';
 
-import Login from '../pages/auth/login';
-import Register from '../pages/auth/register';
+import Login from '../pages/auth/Login';
+import Register from '../pages/auth/Register';
 
+
+export const GUEST_ROUTES = [
+    'login',
+    'register'
+]
 
 const GuestRoutes = {
     path: '/',
@@ -14,11 +19,11 @@ const GuestRoutes = {
             element: <RequireNotAuth />,
             children: [
                 {
-                    path: 'login',
+                    path: GUEST_ROUTES[0],
                     element: <Login />
                 },
                 {
-                    path: 'register',
+                    path: GUEST_ROUTES[1],
                     element: <Register />
                 }
             ]

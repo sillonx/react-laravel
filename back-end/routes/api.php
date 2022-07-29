@@ -19,12 +19,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-//Routes pour login/register
+//Authentication related routes
 Route::group(['prefix' => 'auth'], function () {
     Route::post('register', [UserController::class, 'register']);
     Route::post('login', [UserController::class, 'login']);
     Route::post('logout', [UserController::class, 'logout']);
-    Route::post('verify', [UserController::class, 'verify']);
-    
-    Route::get('roles', [RoleController::class, 'roles']);
+    Route::post('verifyToken', [UserController::class, 'verifyToken']);
+    Route::get('getRoles', [RoleController::class, 'getRoles']);
 });

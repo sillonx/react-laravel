@@ -4,9 +4,9 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 
-import { LoginAPI } from '../../services/authServices';
+import { LoginAPI } from '../../services/AuthServices';
 
-import { login } from '../../store/reducers/auth';
+import { login } from '../../store/reducers/Auth';
 
 import { 
 Typography,
@@ -19,7 +19,8 @@ InputLabel,
 IconButton,
 FormControl,
 FormHelperText, 
-Checkbox } from '@mui/material';
+Checkbox 
+} from '@mui/material';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -65,15 +66,15 @@ export default function Login () {
 
     
     return (
-        <Grid container direction='column' justifyContent='center' alignItems='center' p={10} sx={{ display:'flex' }}>
-            <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
+        <Grid container direction='column' justifyContent='center' alignItems='center' py='10%' sx={{ display:'flex' }}>
+            <Grid item justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
                 <Stack direction='column' spacing={2} p={2}>
                     <Typography variant='h3'>Login</Typography>
                     <Typography variant='h5' color='error'>{errorMessage ? errorMessage : ''}</Typography>
                 </Stack>
             </Grid>
 
-            <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
+            <Grid item justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
                 <form onSubmit={handleSubmit}>
                     <Stack direction='column' spacing={3} p={2} justifyContent='center' alignItems='center'>
                         <FormControl sx={{ width:250 }}>
@@ -120,7 +121,7 @@ export default function Login () {
                 </form>
             </Grid>
 
-            <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
+            <Grid item justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
                 <Link to='/register'>Create an account</Link>
             </Grid>
         </Grid>

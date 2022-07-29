@@ -4,11 +4,13 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 import { useDispatch } from 'react-redux';
 
-import axios from '../../api/axios';
+import axios from '../../api/Axios';
 
-import { RegisterAPI, LoginAPI } from '../../services/authServices';
+import { RegisterAPI, LoginAPI } from '../../services/AuthServices';
 
-import { login } from '../../store/reducers/auth';
+import { login } from '../../store/reducers/Auth';
+
+import Loading from '../public/Loading';
 
 import { 
 Typography,
@@ -22,7 +24,8 @@ IconButton,
 FormControl,
 FormHelperText,
 Select,
-MenuItem } from '@mui/material';
+MenuItem 
+} from '@mui/material';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -62,11 +65,19 @@ export default function Register () {
     const [showPassword, setShowPassword] = useState(false);
     const [showMatch, setShowMatch] = useState(false);
 
+    const [loading, setLoading] = useState(true);
+
     const dispatch = useDispatch();
 
     useEffect( () => {
-        axios.get('/auth/roles').then( (res) => {
+        axios.get('/auth/getRoles')
+        .then( (res) => {
             setRoles(res?.data?.roles);
+            setLoading(false);
+        })
+        .catch(function (error) {
+            setErrorMessage('Failed to load roles');
+            setLoading(false);
         });
     }, []);
 
@@ -109,157 +120,166 @@ export default function Register () {
             remember : false
         };
         try {
-            const resAPI = await RegisterAPI(newUser);
-            setSuccessMessage(resAPI);
-        } catch(err) {
+            await RegisterAPI(newUser);
+            setSuccessMessage('Registration successful');
+        } 
+        catch(err) {
             setErrorMessage('Registration failed');
         }
         try {
             const resAPI = await LoginAPI(loginUser);
             dispatch(login({ resAPI }));
             navigate(from, { replace: true });
-        } catch(err) {
+        } 
+        catch(err) {
             setErrorMessage('Auto login failed');
         }
     }
 
 
     return (
-        <Grid container direction='column' justifyContent='center' alignItems='center' p={10} sx={{ display:'flex' }}>
-            <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
-                <Stack direction='column' spacing={2} p={2}>
-                    <Typography variant='h3'>Register</Typography>
-                    <Typography variant='h5' color='success'>{successMessage ? successMessage : ''}</Typography>
-                    <Typography variant='h5' color='error'>{errorMessage ? errorMessage : ''}</Typography>
-                </Stack>
-            </Grid>
-
-            <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
-                <form onSubmit={handleSubmit}>
-                    <Stack direction='column' spacing={3} p={2} justifyContent='center' alignItems='center'>
-                        <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
-                            <FormControl sx={{ width:250 }}>
-                                <InputLabel>Role *</InputLabel>
-                                <Select
-                                value={role}
-                                label='Role'
-                                onChange={(e) => setRole(e.target.value)} >
-                                    {roles.map( (index) =>
-                                        <MenuItem key={index.public} value={index.public}>{index.name}</MenuItem>)}
-                                </Select>
-                            </FormControl>
-                            {
-                                validRole ?
-                                <CheckCircleIcon color='success' />
-                                : <CancelIcon color='error' />
-                            }
+        <>
+            {loading
+            ? 
+                <Loading />
+            :
+                <Grid container direction='column' justifyContent='center' alignItems='center' p={10} sx={{ display:'flex' }}>
+                    <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
+                        <Stack direction='column' spacing={2} p={2}>
+                            <Typography variant='h3'>Register</Typography>
+                            <Typography variant='h5' sx={{  color:'success.main' }}>{successMessage ? successMessage : ''}</Typography>
+                            <Typography variant='h5' sx={{  color:'error.main' }}>{errorMessage ? errorMessage : ''}</Typography>
                         </Stack>
+                    </Grid>
 
-                        <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
-                            <FormControl  sx={{ width:250 }}>
-                                <InputLabel>Username *</InputLabel>
-                                <OutlinedInput
-                                    type='text'
-                                    value={name}
-                                    required
-                                    autoComplete='off'
-                                    onChange={(e) => setName(e.target.value)}
-                                    label='Username' />
-                                    <FormHelperText></FormHelperText>
-                            </FormControl>
-                            {
-                                validName ?
-                                <CheckCircleIcon color='success' />
-                                : <CancelIcon color='error' />
-                            }
+                    <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
+                        <form onSubmit={handleSubmit}>
+                            <Stack direction='column' spacing={3} p={2} justifyContent='center' alignItems='center'>
+                                <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
+                                    <FormControl sx={{ width:250 }}>
+                                        <InputLabel>Role *</InputLabel>
+                                        <Select
+                                        value={role}
+                                        label='Role'
+                                        onChange={(e) => setRole(e.target.value)} >
+                                            {roles.map( (index) =>
+                                                <MenuItem key={index.id} value={index.id}>{index.name}</MenuItem>)}
+                                        </Select>
+                                    </FormControl>
+                                    {
+                                        validRole ?
+                                        <CheckCircleIcon color='success' />
+                                        : <CancelIcon color='error' />
+                                    }
+                                </Stack>
+
+                                <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
+                                    <FormControl  sx={{ width:250 }}>
+                                        <InputLabel>Username *</InputLabel>
+                                        <OutlinedInput
+                                            type='text'
+                                            value={name}
+                                            required
+                                            autoComplete='off'
+                                            onChange={(e) => setName(e.target.value)}
+                                            label='Username' />
+                                            <FormHelperText></FormHelperText>
+                                    </FormControl>
+                                    {
+                                        validName ?
+                                        <CheckCircleIcon color='success' />
+                                        : <CancelIcon color='error' />
+                                    }
+                                </Stack>
+
+                                <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
+                                    <FormControl  sx={{ width:250 }}>
+                                        <InputLabel>Email *</InputLabel>
+                                        <OutlinedInput
+                                            type='email'
+                                            value={email}
+                                            required
+                                            autoComplete='off'
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            label='Email' />
+                                            <FormHelperText></FormHelperText>
+                                    </FormControl>
+                                    {
+                                        validEmail ?
+                                        <CheckCircleIcon color='success' />
+                                        : <CancelIcon color='error' />
+                                    }
+                                </Stack>
+
+                                <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
+                                    <FormControl  sx={{ width:250 }}>
+                                        <InputLabel>Password *</InputLabel>
+                                        <OutlinedInput
+                                            type={showPassword ? 'text' : 'password'}
+                                            value={password}
+                                            required
+                                            autoComplete='off'
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            endAdornment={
+                                                <InputAdornment position='end'>
+                                                    <IconButton
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    edge='end' >
+                                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment> }
+                                            label='Password' />
+                                            <FormHelperText></FormHelperText>
+                                    </FormControl>
+                                    {
+                                        validPassword ?
+                                        <CheckCircleIcon color='success' />
+                                        : <CancelIcon color='error' />
+                                    }
+                                </Stack>
+
+                                <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
+                                    <FormControl  sx={{ width:250 }}>
+                                        <InputLabel>Confirm password *</InputLabel>
+                                        <OutlinedInput
+                                            type={showMatch ? 'text' : 'password'}
+                                            value={match}
+                                            required
+                                            autoComplete='off'
+                                            onChange={(e) => setMatch(e.target.value)}
+                                            endAdornment={
+                                                <InputAdornment position='end'>
+                                                    <IconButton
+                                                    onClick={() => setShowMatch(!showMatch)}
+                                                    edge='end' >
+                                                    {showMatch ? <VisibilityOff /> : <Visibility />}
+                                                    </IconButton>
+                                                </InputAdornment> }
+                                            label='Confirm password' />
+                                            <FormHelperText></FormHelperText>
+                                    </FormControl>
+                                    {
+                                        validMatch ?
+                                        <CheckCircleIcon color='success' />
+                                        : <CancelIcon color='error' />
+                                    }
+                                </Stack>
+
+                                <Button variant='contained' type='submit' size='large'>
+                                    Sing Up
+                                </Button>
+                            </Stack>
+                        </form>
+                    </Grid>
+
+                    <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
+                        <Stack direction='column' p={2}>
+                        <Typography variant='subtitle1' color='text.secondary'>* : required fields</Typography>
+                        <Link to='/login'>Already have an account ?</Link>
                         </Stack>
-
-                        <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
-                            <FormControl  sx={{ width:250 }}>
-                                <InputLabel>Email *</InputLabel>
-                                <OutlinedInput
-                                    type='email'
-                                    value={email}
-                                    required
-                                    autoComplete='off'
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    label='Email' />
-                                    <FormHelperText></FormHelperText>
-                            </FormControl>
-                            {
-                                validEmail ?
-                                <CheckCircleIcon color='success' />
-                                : <CancelIcon color='error' />
-                            }
-                        </Stack>
-                        
-                        <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
-                            <FormControl  sx={{ width:250 }}>
-                                <InputLabel>Password *</InputLabel>
-                                <OutlinedInput
-                                    type={showPassword ? 'text' : 'password'}
-                                    value={password}
-                                    required
-                                    autoComplete='off'
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    endAdornment={
-                                        <InputAdornment position='end'>
-                                            <IconButton
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            edge='end' >
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment> }
-                                    label='Password' />
-                                    <FormHelperText></FormHelperText>
-                            </FormControl>
-                            {
-                                validPassword ?
-                                <CheckCircleIcon color='success' />
-                                : <CancelIcon color='error' />
-                            }
-                        </Stack>
-
-                        <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
-                            <FormControl  sx={{ width:250 }}>
-                                <InputLabel>Confirm password *</InputLabel>
-                                <OutlinedInput
-                                    type={showMatch ? 'text' : 'password'}
-                                    value={match}
-                                    required
-                                    autoComplete='off'
-                                    onChange={(e) => setMatch(e.target.value)}
-                                    endAdornment={
-                                        <InputAdornment position='end'>
-                                            <IconButton
-                                            onClick={() => setShowMatch(!showMatch)}
-                                            edge='end' >
-                                            {showMatch ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment> }
-                                    label='Confirm password' />
-                                    <FormHelperText></FormHelperText>
-                            </FormControl>
-                            {
-                                validMatch ?
-                                <CheckCircleIcon color='success' />
-                                : <CancelIcon color='error' />
-                            }
-                        </Stack>
-
-                        <Button variant='contained' type='submit' size='large'>
-                            Sing Up
-                        </Button>
-                    </Stack>
-                </form>
-            </Grid>
-
-            <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
-                <Stack direction='column' p={2}>
-                <Typography variant='subtitle1' color='text.secondary'>* : required fields</Typography>
-                <Link to='/login'>Already have an account ?</Link>
-                </Stack>
-            </Grid>
-        </Grid>
+                    </Grid>
+                </Grid>
+            }
+        </>
     )
 }
