@@ -11,22 +11,31 @@ import { login } from '../../store/reducers/Auth';
 import Headers from '../layouts/headers';
 
 import { 
-Typography,
-Grid,
-Stack,
-Button,
-OutlinedInput,
-InputAdornment,
-InputLabel,
-IconButton,
-FormControl,
-FormHelperText, 
-Checkbox 
+    Typography,
+    Grid,
+    Stack,
+    Button,
+    OutlinedInput,
+    InputAdornment,
+    InputLabel,
+    IconButton,
+    FormControl,
+    FormHelperText, 
+    Checkbox 
 } from '@mui/material';
+
+import { styled } from '@mui/material/styles';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+
+const MyLink = styled(Link)(({ theme }) => ({
+    color: theme.palette.link.main,
+    '&:visited':{
+        color: theme.palette.link.visited
+    }
+}));
 
 export default function Login() {
 
@@ -126,7 +135,7 @@ export default function Login() {
                 </Grid>
 
                 <Grid item justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
-                    <Link to='/register'>Create an account</Link>
+                    <MyLink to='/register'>Create an account</MyLink>
                 </Grid>
             </Grid>
         </>

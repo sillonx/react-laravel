@@ -11,7 +11,7 @@ const DarkTheme = createTheme({
             main: '#167BDF'
         },
         secondary: {
-            main: '#A629E4'
+            main: '#9B1FD8'
         },
         error: {
             main: '#ED1616'
@@ -30,8 +30,12 @@ const DarkTheme = createTheme({
             secondary: 'rgba(255,255,255,0.6)'
         },
         background: {
-            default: '#353535',
-            paper: '#353535'
+            default: '#404040',
+            paper: '#404040'
+        },
+        link: {
+            main: '#2C3EF2',
+            visited: '#9B1FD8'
         }
     },
     typography: {

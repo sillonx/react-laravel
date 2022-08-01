@@ -30,23 +30,13 @@ export default function Settings() {
         <>
             <Headers />
             <Navbar />
-            {user.status 
-            ?
-                <Typography variant='h5'>Welcome to the settings page {user?.name}</Typography>
-            :
-                <Typography variant='h5'>Welcome to the settings page</Typography>
-            }
+            <Typography variant='h5'>Welcome to the settings page {user?.name}</Typography>
             <Stack direction='row' p={2} spacing={1} alignItems='center' justifyContent='flex-start'>
                 <Typography>
                     App theme :
                 </Typography>
                 <Button variant='contained' size='large' onClick={handleChangeMode} endIcon={cookies.mode === 'dark' ? <DarkModeIcon /> : <LightModeIcon />} sx={{ '&:hover': { backgroundColor:'primary.main', bowShadow:15 } }}>
-                    {cookies.mode === 'dark'
-                    ?
-                        'Dark'
-                    :
-                        'Light'
-                    }
+                    {cookies.mode === 'dark' ? 'Dark' : 'Light'}
                 </Button>
             </Stack>
             <Footers />

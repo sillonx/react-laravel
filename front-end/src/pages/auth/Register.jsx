@@ -14,29 +14,40 @@ import Loading from '../utils/Loading';
 import Headers from '../layouts/headers';
 
 import { 
-Typography,
-Grid,
-Stack,
-Button,
-OutlinedInput,
-InputAdornment,
-InputLabel,
-IconButton,
-FormControl,
-FormHelperText,
-Select,
-MenuItem 
+    Typography,
+    Grid,
+    Stack,
+    Button,
+    OutlinedInput,
+    InputAdornment,
+    InputLabel,
+    IconButton,
+    FormControl,
+    FormHelperText,
+    Select,
+    MenuItem,
+    Checkbox,
+    Link as MuiLink
 } from '@mui/material';
+
+import { styled } from '@mui/material/styles';
 
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 
+
 const NAME_REGEX = /^[a-zA-Z][a-z-A-Z0-9-_ ]{3,24}$/;
 const EMAIL_REGEX = /^[a-zA-Z][a-zA-Z0-9.-_]+@[a-zA-Z]+\.([a-zA-Z])+$/;
 const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%-_]).{8,24}$/;
 
+const MyLink = styled(Link)(({ theme }) => ({
+    color: theme.palette.link.main,
+    '&:visited':{
+        color: theme.palette.link.visited
+    }
+}));
 
 export default function Register() {
 
@@ -65,6 +76,8 @@ export default function Register() {
 
     const [showPassword, setShowPassword] = useState(false);
     const [showMatch, setShowMatch] = useState(false);
+
+    const [agree, setAgree] = useState(false);
 
     const [loading, setLoading] = useState(true);
 
@@ -106,7 +119,11 @@ export default function Register() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!NAME_REGEX.test(name) || !EMAIL_REGEX.test(email) || !PASSWORD_REGEX.test(password) || !PASSWORD_REGEX.test(match) || role === '') {
-            setErrorMessage('Some fields may be invalid');
+            setErrorMessage('Some fields are invalid');
+            return;
+        }
+        if (!agree) {
+            setErrorMessage('You must agree to our terms of service')
             return;
         }
         const newUser = {
@@ -156,11 +173,11 @@ export default function Register() {
                         </Grid>
 
                         <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
-                            <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit}>
                                 <Stack direction='column' spacing={3} p={2} justifyContent='center' alignItems='center'>
                                     <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
                                         <FormControl sx={{ width:250 }}>
-                                            <InputLabel>Role *</InputLabel>
+                                            <InputLabel>Role*</InputLabel>
                                             <Select
                                             value={role}
                                             label='Role'
@@ -177,8 +194,8 @@ export default function Register() {
                                     </Stack>
 
                                     <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
-                                        <FormControl  sx={{ width:250 }}>
-                                            <InputLabel>Username *</InputLabel>
+                                        <FormControl sx={{ width:250 }}>
+                                            <InputLabel>Username*</InputLabel>
                                             <OutlinedInput
                                                 type='text'
                                                 value={name}
@@ -197,7 +214,7 @@ export default function Register() {
 
                                     <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
                                         <FormControl  sx={{ width:250 }}>
-                                            <InputLabel>Email *</InputLabel>
+                                            <InputLabel>Email*</InputLabel>
                                             <OutlinedInput
                                                 type='email'
                                                 value={email}
@@ -216,7 +233,7 @@ export default function Register() {
 
                                     <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
                                         <FormControl  sx={{ width:250 }}>
-                                            <InputLabel>Password *</InputLabel>
+                                            <InputLabel>Password*</InputLabel>
                                             <OutlinedInput
                                                 type={showPassword ? 'text' : 'password'}
                                                 value={password}
@@ -243,7 +260,7 @@ export default function Register() {
 
                                     <Stack direction='row' spacing={1} justifyContent='center' alignItems='center'>
                                         <FormControl  sx={{ width:250 }}>
-                                            <InputLabel>Confirm password *</InputLabel>
+                                            <InputLabel>Confirm password*</InputLabel>
                                             <OutlinedInput
                                                 type={showMatch ? 'text' : 'password'}
                                                 value={match}
@@ -268,6 +285,15 @@ export default function Register() {
                                         }
                                     </Stack>
 
+                                    <Stack direction='row' spacing={0.1} justifyContent='center' alignItems='center'>
+                                        <Checkbox checked={agree}  onChange={() => setAgree(!agree)} />
+                                        <Typography variant='subtitle1' paragraph={true}>
+                                            By signing up, you agree to our&nbsp;
+                                            <MyLink to='/legal/terms_of_service' target='_blank' rel='noreferrer' sx={{ textDecoration: 'none' }}>Terms of service</MyLink>
+                                            &nbsp;and&nbsp;<MyLink to='/legal/privacy_policy' target='_blank' rel='noreferrer' sx={{ textDecoration: 'none' }}>Privacy policy</MyLink>.
+                                        </Typography>
+                                    </Stack>
+
                                     <Button variant='contained' type='submit' size='large'>
                                         Sing Up
                                     </Button>
@@ -276,9 +302,9 @@ export default function Register() {
                         </Grid>
 
                         <Grid item xs={4} sm={4} md={4} lg={4} xl={4} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
-                            <Stack direction='column' p={2}>
-                            <Typography variant='subtitle1' color='text.secondary'>* : required fields</Typography>
-                            <Link to='/login'>Already have an account ?</Link>
+                            <Stack direction='column' alignItems='center' justifyContent='center'>
+                            <Typography variant='subtitle1' color='text.secondary'>* = required fields</Typography>
+                            <MyLink to='/login'>Already have an account ?</MyLink>
                             </Stack>
                         </Grid>
                     </Grid>

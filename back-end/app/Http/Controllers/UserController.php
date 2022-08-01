@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\Permission;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Cookie;
@@ -38,6 +39,13 @@ class UserController extends Controller {
             'role_id' => $request->role_id
         ]);
 
+        // Get role permissions and assign them to user
+        $permissions = DB::table('permission_role')->where('role_id', $request->role_id)->get();
+        foreach ($permissions as $i) {
+            $row = array('permission_id'=>$i->permission_id,'user_id'=>$user->id);
+            DB::table('permission_user')->insert($row);
+        }
+
         // Return confirmation
         return Response()->json([
             'message' => 'Registration successful'
@@ -59,7 +67,7 @@ class UserController extends Controller {
         $user = Auth::user();
 
         // Get permissions from role
-        $ternary = DB::table('permission_role')->where('role_id',$user->role_id)->get();
+        $ternary = DB::table('permission_user')->where('user_id', $user->id)->get();
         $permissions = array();
         foreach ($ternary as $i) {
             $name = DB::table('permissions')->select('name')->where('id', $i->permission_id)->first()->name;
@@ -110,7 +118,7 @@ class UserController extends Controller {
                 // Retreive user infos
                 $user = DB::table('users')->select('name','email','created_at')->where('id', $accessToken->tokenable_id)->first();
                 $role_id = DB::table('users')->select('role_id')->where('id', $accessToken->tokenable_id)->first()->role_id;
-                $ternary = DB::table('permission_role')->where('role_id',$role_id)->get();
+                $ternary = DB::table('permission_user')->where('user_id', $accessToken->tokenable_id)->get();
                 $permissions = array();
                 foreach ($ternary as $i) {
                     $name = DB::table('permissions')->select('name')->where('id', $i->permission_id)->first()->name;

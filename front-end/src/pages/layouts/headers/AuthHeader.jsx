@@ -8,7 +8,7 @@ import {
 import HomeIcon from '@mui/icons-material/Home';
 
 
-export default function LoginHeader () {
+export default function AuthHeader () {
 
     const location = useLocation();
     const navigate = useNavigate();

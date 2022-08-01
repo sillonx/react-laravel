@@ -11,7 +11,7 @@ const LightTheme = createTheme({
             main: '#167BDF'
         },
         secondary: {
-            main: '#A629E4'
+            main: '#9316DF'
         },
         error: {
             main: '#ED1616'
@@ -32,6 +32,10 @@ const LightTheme = createTheme({
         background: {
             default: '#FFFFFF',
             paper: '#FFFFFF'
+        },
+        link: {
+            main: '#2C3EF2',
+            visited: '#9B1FD8'
         }
     },
     typography: {

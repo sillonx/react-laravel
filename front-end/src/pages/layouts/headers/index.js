@@ -2,8 +2,7 @@ import { useLocation } from 'react-router-dom';
 
 import HomeHeader from './HomeHeader';
 import ProfileHeader from './ProfileHeader';
-import LoginHeader from './LoginHeader';
-import RegisterHeader from './RegisterHeader';
+import AuthHeader from './AuthHeader';
 import SettingsHeader from './SettingsHeader';
 import DashboardHeader from './DashboardHeader';
 import DefaultHeader from './DefaultHeader';
@@ -19,11 +18,8 @@ export default function Headers() {
         else if (location === '/profile') {
             return <ProfileHeader />
         }
-        else if (location === '/login') {
-            return <LoginHeader />
-        }
-        else if (location === '/register') {
-            return <RegisterHeader />
+        else if (location === '/login' || location === '/register') {
+            return <AuthHeader />
         }
         else if (location === '/settings') {
             return <SettingsHeader />
