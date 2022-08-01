@@ -1,5 +1,10 @@
-export default function DefaultHeader () {
+import { 
+    Grid
+} from '@mui/material'
+
+export default function DefaultFooter () {
     return (
-    <h3>Default Footer</h3>
+        <Grid container direction='row' justifyContent='space-between' alignItems='center' py={4} px={1} sx={{ position:'relative', right:0, left:0, bottom:0, backgroundColor:'primary.main' }}>
+        </Grid>
     )
 }

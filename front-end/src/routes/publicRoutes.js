@@ -2,8 +2,8 @@ import { Outlet } from 'react-router-dom';
 
 import Home from '../pages/public/Home';
 import Settings from '../pages/public/Settings';
-import Error401 from '../pages/errors/401';
-import Error404 from '../pages/errors/404';
+import Error401 from '../pages/utils/Error401';
+import Error404 from '../pages/utils/Error404';
 
 
 export const PUBLIC_ROUTES = [

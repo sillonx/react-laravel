@@ -17,12 +17,14 @@ import {
     Snackbar,
     Alert,
     Stack,
-    MenuItem,
     Menu,
+    MenuItem,
     AppBar,
     Container,
     Toolbar
 } from '@mui/material';
+
+import { styled } from '@mui/material/styles';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
@@ -33,6 +35,21 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 
+
+const MyMenuItem = styled(MenuItem)(({ theme }) => ({
+    fullwidth:'true',
+    '&:hover':{
+        color: theme.palette.primary.main,
+        backgroundColor: 'rgba(0,0,0,0)'
+    }
+}));
+const MyButton = styled(Button)(({ theme }) => ({
+    color:theme.palette.common.white,
+    fontWeight:'bold',
+    '&:hover':{
+        textDecoration: 'underline'
+    }
+}));
 
 export default function Navbar() {
 
@@ -69,10 +86,10 @@ export default function Navbar() {
         try {
             await LogoutAPI();
             dispatch(logout({}));
-            if (PUBLIC_ROUTES.includes(location.pathname.slice(1))) {
+            if ((location.pathname.length > 1 && PUBLIC_ROUTES.includes(location.pathname.slice(1))) || PUBLIC_ROUTES.includes(location.pathname)) {
                 setOpenSnackbar(true);
                 setLogoutSuccess(true);
-                setMessage('Logout successful');
+                setMessage('Logged out successfully');
             }
             else {
                 navigate('/', { from: location, replace: false });
@@ -109,65 +126,65 @@ export default function Navbar() {
 
 
     return (
-        <AppBar position='sticky' sx={{ borderRadius:'16px', backgroundColor:'primary.main' }}>
+        <AppBar position='sticky' sx={{ backgroundColor:'primary.main' }}>
             <Container maxWidth='x1'>
                 <Toolbar disableGutters>
                     <Grid container direction='row' justifyContent='space-between' alignItems='center' p={1} sx={{ position:'static', bottom:0, display:'flex' }}>
                         <Grid item xs={6} sm={6} md={6} lg={6} xl={6} justifyContent='flex-start' alignItems='center' sx={{ display:'flex' }}>
                             <Stack direction='row' spacing={4}>
-                                <Button onClick={handleHome} size='large' startIcon={<HomeIcon />} sx={{ color:'common.white', fontWeight:'bold', '&:hover': { textDecoration: 'underline' } }}>
+                                <MyButton onClick={handleHome} size='large' startIcon={<HomeIcon />}>
                                     Home
-                                </Button>
+                                </MyButton>
                                 
                                 {user?.permissions.includes('Profile') &&
-                                <Button onClick={handleProfile} size='large' startIcon={<PersonIcon />} sx={{ color:'common.white', fontWeight:'bold', '&:hover': { textDecoration: 'underline' } }}>
+                                <MyButton onClick={handleProfile} size='large' startIcon={<PersonIcon />}>
                                     Profile
-                                </Button>}
+                                </MyButton>}
 
                                 {user?.permissions.includes('Dashboard') &&
-                                <Button onClick={handleDashboard} size='large' startIcon={<DisplaySettingsIcon />} sx={{ color:'common.white', fontWeight:'bold', '&:hover': { textDecoration: 'underline' } }}>
+                                <MyButton onClick={handleDashboard} size='large' startIcon={<DisplaySettingsIcon />}>
                                     Dashboard
-                                </Button>}
+                                </MyButton>}
                             </Stack>
                         </Grid>
 
                         <Grid item xs={6} sm={6} md={6} lg={6} xl={6} justifyContent='flex-end' alignItems='center' sx={{ display:'flex' }}>
-                            <Button onClick={handleClickMenu} size='large' endIcon={<MenuIcon fontSize='large' />} sx={{ color:'common.white', fontWeight:'bold' }}>
+                            <Button onClick={handleClickMenu} size='large' endIcon={<MenuIcon />} sx={{ color:'common.white', fontWeight:'bold' }}>
                                 Menu
                             </Button>
 
                             <Menu open={openMenu} onClose={handleCloseMenu} anchorEl={anchorMenu}>
-                                <MenuItem onClick={handleSettings} fullwidth='true' sx={{ '&:hover': { backgroundColor:'background.paper' } }}>
-                                    <Stack direction='row' spacing={1} sx={{ '&:hover': { color:'primary.main' } }}>
+                                <MyMenuItem onClick={handleSettings}>
+                                    <Stack direction='row' spacing={1}>
                                         <SettingsIcon />
                                         <Typography sx={{ fontWeight:'bold' }}>Settings</Typography>
                                     </Stack>
-                                </MenuItem>
+                                </MyMenuItem>
 
                                 {!user?.status &&
-                                <MenuItem onClick={handleLogin} fullwidth='true' sx={{ '&:hover': { backgroundColor:'background.paper' } }}>
-                                    <Stack direction='row' spacing={1} sx={{ '&:hover': { color:'primary.main' } }}>
+                                <MyMenuItem onClick={handleLogin}>
+                                    <Stack direction='row' spacing={1}>
                                         <LoginIcon />
                                         <Typography sx={{ fontWeight:'bold' }}>Login</Typography>
                                     </Stack>
-                                </MenuItem> }
+                                </MyMenuItem> }
 
                                 {!user?.status &&
-                                <MenuItem onClick={handleRegister} fullwidth='true' sx={{'&:hover': { backgroundColor:'background.paper' } }}>
-                                    <Stack direction='row' spacing={1} sx={{ '&:hover': { color:'primary.main' } }}>
+                                <MyMenuItem onClick={handleRegister}>
+                                    <Stack direction='row' spacing={1}>
                                         <PersonAddIcon />
                                         <Typography sx={{ fontWeight:'bold' }}>Register</Typography>
                                     </Stack>
-                                </MenuItem> }
+                                </MyMenuItem> }
 
                                 
                                 {user?.status &&
-                                <MenuItem onClick={handleLogout} fullwidth='true' sx={{ '&:hover': { backgroundColor:'background.paper' } }}>
-                                <Stack direction='row' spacing={1} sx={{ '&:hover': { color:'primary.main' } }}>
+                                <MyMenuItem onClick={handleLogout}>
+                                <Stack direction='row' spacing={1}>
                                         <LogoutIcon />
                                         <Typography sx={{ fontWeight:'bold' }}>Logout</Typography>
                                     </Stack>
-                                </MenuItem> }
+                                </MyMenuItem> }
                             </Menu>
                         </Grid>
                     </Grid>

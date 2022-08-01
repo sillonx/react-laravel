@@ -17,11 +17,14 @@ export default function Home() {
         <>
             <Headers />
             <Navbar />
+            <Typography variant='h3'>
+                React-Laravel API Authentication
+            </Typography>
             {user.status 
             ?
-                <Typography sx={{ height:500 }}>Welcome to the home page {user?.name}</Typography>
+                <Typography variant='h6' sx={{ height:500 }}>You're logged in as {user?.name}</Typography>
             :
-                <Typography sx={{ height:500 }}>Welcome to the home page</Typography>
+                <Typography variant='h6' sx={{ height:500 }}>You're not logged in</Typography>
             }
             <Footers />
         </>

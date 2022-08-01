@@ -13,7 +13,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { useCookies } from 'react-cookie'
 
 import MyRoutes from './routes';
-import Loading from './pages/public/Loading';
+import Loading from './pages/utils/Loading';
 
 import LightTheme from './themes/Light';
 import DarkTheme from './themes/Dark';

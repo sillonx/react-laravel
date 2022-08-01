@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 
 
-export default function HomeHeader () {
+export default function SettingsHeader () {
     
     return (
         <Grid container direction='row' justifyContent='space-between' alignItems='center' p={3}  spacing={0} sx={{ position:'static', bottom:0, display:'flex', backgroundColor:'primary.main' }}>
@@ -13,7 +13,7 @@ export default function HomeHeader () {
 
             <Grid item xs={10} sm={10} md={10} lg={10} xl={10} justifyContent='center' alignItems='center' sx={{ display:'flex' }}>
                 <Typography variant='h3' sx={{ color:'common.white', fontWeight:'bold' }}>
-                    Home
+                    Settings
                 </Typography>
             </Grid>
             

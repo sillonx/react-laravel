@@ -28,15 +28,13 @@ export default function Loading() {
     }, [dotsCounter]);
 
     return (
-        <>
-            <Grid container direction='column' justifyContent='center' alignItems='center' py='10%' spacing={2} sx={{ display:'flex' }}>
-                <Grid item justifyContent='center' alignItems='center' p={3} sx={{ display:'flex' }}>
-                    <Typography variant='h4'>{loadingText}</Typography>
-                </Grid>
-                <Grid item justifyContent='center' alignItems='center' p={3} sx={{ display:'flex' }}>
-                    <CircularProgress size={85} />
-                </Grid>
+        <Grid container direction='column' justifyContent='center' alignItems='center' py='20%' spacing={2} sx={{ display:'flex' }}>
+            <Grid item justifyContent='center' alignItems='center' p={3} sx={{ display:'flex' }}>
+                <Typography variant='h4'>{loadingText}</Typography>
             </Grid>
-        </>
+            <Grid item justifyContent='center' alignItems='center' p={3} sx={{ display:'flex' }}>
+                <CircularProgress size={85} />
+            </Grid>
+        </Grid>
     )
 }
