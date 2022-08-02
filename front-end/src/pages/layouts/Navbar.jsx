@@ -8,7 +8,7 @@ import { LogoutAPI } from '../../services/AuthServices';
 
 import { logout } from '../../store/reducers/Auth';
 
-import { PUBLIC_ROUTES } from '../../routes/PublicRoutes';
+import { AUTH_ROUTES } from '../../routes/AuthRoutes';
 
 import { 
     Grid,
@@ -86,7 +86,7 @@ export default function Navbar() {
         try {
             await LogoutAPI();
             dispatch(logout({}));
-            if ((location.pathname.length > 1 && PUBLIC_ROUTES.includes(location.pathname.slice(1))) || PUBLIC_ROUTES.includes(location.pathname)) {
+            if (!AUTH_ROUTES.includes(location.pathname)) {
                 setOpenSnackbar(true);
                 setLogoutSuccess(true);
                 setMessage('Logged out successfully');
@@ -94,7 +94,8 @@ export default function Navbar() {
             else {
                 navigate('/', { from: location, replace: false });
             }
-        } catch (err) {
+        } 
+        catch (err) {
             setOpenSnackbar(true);
             setLogoutSuccess(false);
             setMessage('Error during logout');

@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 
-import RequireNotAuth from './middleware/RequireNotAuth';
+import RequireNotAuth from './middlewares/RequireNotAuth';
 
 import Login from '../pages/auth/Login';
 import Register from '../pages/auth/Register';

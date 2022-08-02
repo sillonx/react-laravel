@@ -25,7 +25,7 @@ export default function App() {
     const [cookies] = useCookies(['mode']);
 
     useEffect( () => {
-        axios.post('auth/verifyToken', {}, {withCredentials:true})
+        axios.post('auth/verify-token', {}, {withCredentials:true})
         .then( (res) => {
             if (res?.data?.status === 200) {
                 const name = res?.data?.user?.name;

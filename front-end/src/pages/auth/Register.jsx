@@ -26,8 +26,7 @@ import {
     FormHelperText,
     Select,
     MenuItem,
-    Checkbox,
-    Link as MuiLink
+    Checkbox
 } from '@mui/material';
 
 import { styled } from '@mui/material/styles';
@@ -84,7 +83,7 @@ export default function Register() {
     const dispatch = useDispatch();
 
     useEffect( () => {
-        axios.get('/auth/getRoles')
+        axios.get('/auth/get-roles')
         .then( (res) => {
             setRoles(res?.data?.roles);
             setLoading(false);
@@ -289,8 +288,8 @@ export default function Register() {
                                         <Checkbox checked={agree}  onChange={() => setAgree(!agree)} />
                                         <Typography variant='subtitle1' paragraph={true}>
                                             By signing up, you agree to our&nbsp;
-                                            <MyLink to='/legal/terms_of_service' target='_blank' rel='noreferrer' sx={{ textDecoration: 'none' }}>Terms of service</MyLink>
-                                            &nbsp;and&nbsp;<MyLink to='/legal/privacy_policy' target='_blank' rel='noreferrer' sx={{ textDecoration: 'none' }}>Privacy policy</MyLink>.
+                                            <MyLink to='/terms_of_service' target='_blank' rel='noreferrer' sx={{ textDecoration: 'none' }}>Terms of service</MyLink>
+                                            &nbsp;and&nbsp;<MyLink to='/privacy_policy' target='_blank' rel='noreferrer' sx={{ textDecoration: 'none' }}>Privacy policy</MyLink>.
                                         </Typography>
                                     </Stack>
 

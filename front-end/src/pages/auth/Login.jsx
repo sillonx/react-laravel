@@ -69,7 +69,8 @@ export default function Login() {
             const resAPI = await LoginAPI(loginUser);
             dispatch(login({ resAPI }));
             navigate(from, { replace: true });
-        } catch (err) {
+        } 
+        catch (err) {
             setErrorMessage('Login failed');
             setPassword('');
         }

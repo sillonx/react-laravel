@@ -1,3 +1,5 @@
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { useSelector } from 'react-redux';
 
 import { useCookies } from 'react-cookie';
@@ -12,11 +14,22 @@ import {
     Button
 } from '@mui/material';
 
+import { styled } from '@mui/material/styles';
+
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import PreviewIcon from '@mui/icons-material/Preview';
 
+
+const MyButton = styled(Button)(({ theme }) => ({
+    color:theme.palette.common.white,
+    fontWeight:'bold'
+}));
 
 export default function Settings() {
+
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const user = useSelector( (state) => state.auth);
     const [cookies, setCookie, removeCookie] = useCookies(['mode']);
@@ -25,6 +38,14 @@ export default function Settings() {
       const newMode = (cookies?.mode === 'dark' ? 'light' : 'dark');
       newMode === 'dark' ? setCookie('mode', newMode, {path:'/', maxAge:3153600000}) : removeCookie('mode', {path:'/'});
     };
+
+    const handleTermsOfService = () => {
+        navigate('/terms_of_service', { from: location, replace: false });
+    }
+
+    const handlePrivacyPolicy = () => {
+        navigate('/privacy_policy', { from: location, replace: false });
+    }
     
     return (
         <>
@@ -33,11 +54,29 @@ export default function Settings() {
             <Typography variant='h5'>Welcome to the settings page {user?.name}</Typography>
             <Stack direction='row' p={2} spacing={1} alignItems='center' justifyContent='flex-start'>
                 <Typography>
-                    App theme :
+                    App theme
                 </Typography>
-                <Button variant='contained' size='large' onClick={handleChangeMode} endIcon={cookies.mode === 'dark' ? <DarkModeIcon /> : <LightModeIcon />} sx={{ '&:hover': { backgroundColor:'primary.main', bowShadow:15 } }}>
+                <MyButton variant='contained' onClick={handleChangeMode} endIcon={cookies.mode === 'dark' ? <DarkModeIcon /> : <LightModeIcon />}>
                     {cookies.mode === 'dark' ? 'Dark' : 'Light'}
-                </Button>
+                </MyButton>
+            </Stack>
+
+            <Stack direction='row' p={2} spacing={1} alignItems='center' justifyContent='flex-start'>
+                <Typography> 
+                    Terms of Service
+                </Typography>
+                <MyButton variant='contained' onClick={handleTermsOfService} endIcon={<PreviewIcon />}>
+                    Preview
+                </MyButton>
+            </Stack>
+
+            <Stack direction='row' p={2} spacing={1} alignItems='center' justifyContent='flex-start'>
+                <Typography> 
+                    Privacy Policy
+                </Typography>
+                <MyButton variant='contained' onClick={handlePrivacyPolicy} endIcon={<PreviewIcon />}>
+                    Preview
+                </MyButton>
             </Stack>
             <Footers />
         </>
