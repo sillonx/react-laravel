@@ -43,7 +43,7 @@ export default function App() {
     }, []);
 
     return (
-        <ThemeProvider theme={cookies.mode === 'dark' ? DarkTheme : LightTheme}>
+        <ThemeProvider theme={cookies?.mode === 'dark' ? DarkTheme : LightTheme}>
             <CssBaseline/>  
             {loading ? <Loading /> : <MyRoutes />}   
         </ThemeProvider>
