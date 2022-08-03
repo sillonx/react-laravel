@@ -2,11 +2,7 @@ import axios from '../api/Axios';
 
 
 export const RegisterAPI = async (newUser) => {
-
-    return axios.post('auth/register', newUser, {headers: { 'Content-Type': 'application/json'}})
-    .then( (res) => {
-        return;
-    });
+    return axios.post('auth/register', newUser, {headers: { 'Content-Type': 'application/json'}});
 }
 
 export const LoginAPI = async (loginUser) => {
@@ -21,8 +17,5 @@ export const LoginAPI = async (loginUser) => {
 }
 
 export const LogoutAPI = async () => {
-    return axios.post('auth/logout', {}, {withCredentials:true})
-    .then( (res) => {
-        return;
-    });
+    return axios.post('auth/logout', {}, {withCredentials:true});
 }
